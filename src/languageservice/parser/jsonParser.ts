@@ -10,7 +10,7 @@ import { JSONSchema } from '../jsonSchema';
 import * as objects from '../utils/objects';
 
 import * as nls from 'vscode-nls';
-import { LanguageSettings } from '../yamlLanguageService';
+import { LanguageSettings } from '../mossLanguageService';
 const localize = nls.loadMessageBundle();
 
 export interface IRange {

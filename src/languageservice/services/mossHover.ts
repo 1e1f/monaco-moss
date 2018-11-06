@@ -8,13 +8,13 @@
 
 import * as Parser from '../parser/jsonParser';
 import * as SchemaService from './jsonSchemaService';
-import {JSONWorkerContribution} from '../jsonContributions';
-import {PromiseConstructor, Thenable} from 'vscode-json-languageservice';
+import { JSONWorkerContribution } from '../jsonContributions';
+import { PromiseConstructor, Thenable } from 'vscode-json-languageservice';
 
-import {Hover, TextDocument, Position, Range, MarkedString} from 'vscode-languageserver-types';
+import { Hover, TextDocument, Position, Range, MarkedString } from 'vscode-languageserver-types';
 import { matchOffsetToDocument } from '../utils/arrUtils';
 
-export class YAMLHover {
+export class MossHover {
 
 	private schemaService: SchemaService.IJSONSchemaService;
 	private contributions: JSONWorkerContribution[];
@@ -28,13 +28,13 @@ export class YAMLHover {
 
 	public doHover(document: TextDocument, position: Position, doc): Thenable<Hover> {
 
-		if(!document){
+		if (!document) {
 			this.promise.resolve(void 0);
 		}
 
 		let offset = document.offsetAt(position);
 		let currentDoc = matchOffsetToDocument(offset, doc);
-		if(currentDoc === null){
+		if (currentDoc === null) {
 			return this.promise.resolve(void 0);
 		}
 		const currentDocIndex = doc.documents.indexOf(currentDoc);
@@ -90,7 +90,7 @@ export class YAMLHover {
 					if (s.node === node && !s.inverted && s.schema) {
 						title = title || s.schema.title;
 						markdownDescription = markdownDescription || s.schema["markdownDescription"] || toMarkdown(s.schema.description);
-						if (s.schema.enum)  {
+						if (s.schema.enum) {
 							let idx = s.schema.enum.indexOf(node.getValue());
 							if (s.schema["markdownEnumDescriptions"]) {
 								markdownEnumValueDescription = s.schema["markdownEnumDescriptions"][idx];

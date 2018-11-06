@@ -5,8 +5,9 @@
 'use strict';
 
 import { WorkerManager } from './workerManager';
-import { YAMLWorker } from './yamlWorker';
+import { MossWorker } from './mossWorker';
 import { LanguageServiceDefaultsImpl } from './monaco.contribution';
+import { tokenProvider, languageConf } from './mossLanguage'
 import * as languageFeatures from './languageFeatures';
 
 import Promise = monaco.Promise;
@@ -20,7 +21,7 @@ export function setupMode(defaults: LanguageServiceDefaultsImpl): void {
 	const client = new WorkerManager(defaults);
 	disposables.push(client);
 
-	const worker: languageFeatures.WorkerAccessor = (...uris: Uri[]): Promise<YAMLWorker> => {
+	const worker: languageFeatures.WorkerAccessor = (...uris: Uri[]): Promise<MossWorker> => {
 		return client.getLanguageServiceWorker(...uris);
 	};
 
@@ -32,40 +33,6 @@ export function setupMode(defaults: LanguageServiceDefaultsImpl): void {
 	disposables.push(monaco.languages.registerDocumentFormattingEditProvider(languageId, new languageFeatures.DocumentFormattingEditProvider(worker)));
 	disposables.push(monaco.languages.registerDocumentRangeFormattingEditProvider(languageId, new languageFeatures.DocumentRangeFormattingEditProvider(worker)));
 	disposables.push(new languageFeatures.DiagnosticsAdapter(languageId, worker, defaults));
-	// disposables.push(monaco.languages.setTokensProvider(languageId, createTokenizationSupport(true)));
-	disposables.push(monaco.languages.setLanguageConfiguration(languageId, richEditConfiguration));
+	disposables.push(monaco.languages.setTokensProvider(languageId, tokenProvider));
+	disposables.push(monaco.languages.setLanguageConfiguration(languageId, languageConf));
 }
-
-
-const richEditConfiguration: monaco.languages.LanguageConfiguration = {
-	comments: {
-		lineComment: '#'
-	},
-	brackets: [
-		['{', '}'],
-		['[', ']'],
-		['(', ')']
-	],
-	autoClosingPairs: [
-		{ open: '{', close: '}' },
-		{ open: '[', close: ']' },
-		{ open: '(', close: ')' },
-		{ open: '"', close: '"' },
-		{ open: '\'', close: '\'' },
-	],
-	surroundingPairs: [
-		{ open: '{', close: '}' },
-		{ open: '[', close: ']' },
-		{ open: '(', close: ')' },
-		{ open: '"', close: '"' },
-		{ open: '\'', close: '\'' },
-	],
-
-	onEnterRules: [
-		{
-			beforeText: /:\s*$/,
-			action: { indentAction: monaco.languages.IndentAction.Indent }
-		}
-	],
-};
-

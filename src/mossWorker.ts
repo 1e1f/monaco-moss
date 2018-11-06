@@ -60,7 +60,7 @@ const ajax = (url: string) =>
     request.send();
 	});
 
-export class YAMLWorker {
+export class MossWorker {
 
 	private _ctx: IWorkerContext;
 	private _languageService: yamlService.LanguageService;
@@ -130,7 +130,7 @@ export interface ICreateData {
 }
 
 export function create(ctx: IWorkerContext, createData: ICreateData): YAMLWorker {
-	return new YAMLWorker(ctx, createData);
+	return new MossWorker(ctx, createData);
 }
 
 export function getLineOffsets(textDocString: String): number[] {

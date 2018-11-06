@@ -12,12 +12,12 @@ import {
   Diagnostic
 } from "vscode-languageserver-types";
 import { JSONSchema } from "./jsonSchema";
-import { YAMLDocumentSymbols } from "./services/documentSymbols";
-import { YAMLCompletion } from "./services/yamlCompletion";
+import { MossDocumentSymbols } from "./services/documentSymbols";
+import { MossCompletion } from "./services/mossCompletion";
 import { JSONDocument } from "vscode-json-languageservice";
-import { YAMLHover } from "./services/yamlHover";
-import { YAMLValidation } from "./services/yamlValidation";
-import { format } from "./services/yamlFormatter";
+import { MossHover } from "./services/mossHover";
+import { MossValidation } from "./services/mossValidation";
+import { format } from "./services/mossFormatter";
 import { parse as parseYAML } from "./parser/yamlParser";
 export interface LanguageSettings {
   validate?: boolean; //Setting for whether we want to validate the schema
@@ -26,7 +26,7 @@ export interface LanguageSettings {
   customTags?: Array<String>; //Array of Custom Tags
 }
 
-export type YAMLDocument = { documents: JSONDocument[] };
+export type MossDocument = { documents: JSONDocument[] };
 
 export interface PromiseConstructor {
     /**
@@ -118,7 +118,7 @@ export interface LanguageService {
   doResolve(completionItem);
   resetSchema(uri: string): boolean;
   doFormat(document: TextDocument, options: FormattingOptions, customTags: Array<String>);
-  parseYAMLDocument(document: TextDocument): YAMLDocument;
+  parseYAMLDocument(document: TextDocument): MossDocument;
 }
 
 export function getLanguageService(schemaRequestService, workspaceContext, contributions, customSchemaProvider, promiseConstructor?): LanguageService {
@@ -126,10 +126,10 @@ export function getLanguageService(schemaRequestService, workspaceContext, contr
 
   let schemaService = new JSONSchemaService(schemaRequestService, workspaceContext, customSchemaProvider);
 
-  let completer = new YAMLCompletion(schemaService, contributions, promise);
-  let hover = new YAMLHover(schemaService, contributions, promise);
-  let yamlDocumentSymbols = new YAMLDocumentSymbols();
-  let yamlValidation = new YAMLValidation(schemaService, promise);
+  let completer = new MossCompletion(schemaService, contributions, promise);
+  let hover = new MossHover(schemaService, contributions, promise);
+  let yamlDocumentSymbols = new MossDocumentSymbols();
+  let yamlValidation = new MossValidation(schemaService, promise);
 
   return {
       configure: (settings) => {

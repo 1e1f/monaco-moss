@@ -1,30 +1,30 @@
 {
-  "name": "monaco-yaml",
-  "version": "1.1.0",
-  "description": "YAML plugin for the Monaco Editor",
+  "name": "monaco-moss",
+  "version": "1.0.0",
+  "description": "Moss plugin for the Monaco Editor, derived from monaco-yaml",
   "scripts": {
     "compile": "rimraf ./out && tsc -p ./src/tsconfig.json && tsc -p ./src/tsconfig.esm.json",
     "watch": "tsc -p ./src --watch",
     "prepublish": "rimraf ./release && yarn run compile && node ./scripts/release.js && node ./scripts/bundle && mcopy ./src/monaco.d.ts ./release/monaco.d.ts"
   },
-  "author": "Kevin Decker <kpdecker@gmail.com> (http://incaseofstairs.com)",
+  "author": "Leif Shackelford <structuresound@gmail.com>",
   "maintainers": [
-    "kpdecker",
-    "pengx17"
+    "1e1f"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kpdecker/monaco-yaml"
+    "url": "https://github.com/1e1f/monaco-moss"
   },
   "bugs": {
-    "url": "https://github.com/kpdecker/monaco-yaml/issues"
+    "url": "https://github.com/1e1f/monaco-moss/issues"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.9.3",
     "js-yaml": "^3.12.0",
+    "js-moss": "^0.11.3",
     "jsonc-parser": "^2.0.2",
     "monaco-editor-core": "0.14.6",
     "monaco-languages": "1.5.1",

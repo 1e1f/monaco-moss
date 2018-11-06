@@ -11,7 +11,6 @@ import * as nls from 'vscode-nls';
 const localize = nls.loadMessageBundle();
 
 import * as Yaml from '../../yaml-ast-parser/index'
-import { Kind } from '../../yaml-ast-parser/index'
 import { Schema, Type } from 'js-yaml';
 
 import { getLineStartPositions, getPosition } from '../utils/documentPositionCalculator'

@@ -20,7 +20,7 @@ import { matchOffsetToDocument } from '../utils/arrUtils';
 const localize = nls.loadMessageBundle();
 
 
-export class YAMLCompletion {
+export class MossCompletion {
 
 	private schemaService: SchemaService.IJSONSchemaService;
 	private contributions: JSONWorkerContribution[];

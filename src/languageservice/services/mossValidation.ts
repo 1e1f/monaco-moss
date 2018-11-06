@@ -8,9 +8,9 @@
 import { JSONSchemaService, ResolvedSchema } from './jsonSchemaService';
 import { JSONDocument, ObjectASTNode, IProblem, ProblemSeverity } from '../parser/jsonParser';
 import { TextDocument, Diagnostic, DiagnosticSeverity } from 'vscode-languageserver-types';
-import { PromiseConstructor, Thenable, LanguageSettings} from '../yamlLanguageService';
+import { PromiseConstructor, Thenable, LanguageSettings} from '../mossLanguageService';
 
-export class YAMLValidation {
+export class MossValidation {
 	
 	private jsonSchemaService: JSONSchemaService;
 	private promise: PromiseConstructor;

@@ -8,10 +8,8 @@
 import * as Parser from '../parser/jsonParser';
 
 import { SymbolInformation, SymbolKind, TextDocument, Range, Location } from 'vscode-languageserver-types';
-import { Thenable } from "../yamlLanguageService";
-import { IJSONSchemaService } from "./jsonSchemaService";
 
-export class YAMLDocumentSymbols {
+export class MossDocumentSymbols {
 
 	public findDocumentSymbols(document: TextDocument, doc: Parser.JSONDocument): SymbolInformation[] {
 
