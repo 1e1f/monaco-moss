@@ -13,18 +13,18 @@ declare var require: <T>(moduleId: [string], callback: (module: T) => void) => v
 
 // --- YAML configuration and defaults ---------
 
-export class LanguageServiceDefaultsImpl implements monaco.languages.yaml.LanguageServiceDefaults {
+export class LanguageServiceDefaultsImpl implements monaco.languages.moss.LanguageServiceDefaults {
 
-	private _onDidChange = new Emitter<monaco.languages.yaml.LanguageServiceDefaults>();
-	private _diagnosticsOptions: monaco.languages.yaml.DiagnosticsOptions;
+	private _onDidChange = new Emitter<monaco.languages.moss.LanguageServiceDefaults>();
+	private _diagnosticsOptions: monaco.languages.moss.DiagnosticsOptions;
 	private _languageId: string;
 
-	constructor(languageId: string, diagnosticsOptions: monaco.languages.yaml.DiagnosticsOptions) {
+	constructor(languageId: string, diagnosticsOptions: monaco.languages.moss.DiagnosticsOptions) {
 		this._languageId = languageId;
 		this.setDiagnosticsOptions(diagnosticsOptions);
 	}
 
-	get onDidChange(): IEvent<monaco.languages.yaml.LanguageServiceDefaults> {
+	get onDidChange(): IEvent<monaco.languages.moss.LanguageServiceDefaults> {
 		return this._onDidChange.event;
 	}
 
@@ -32,31 +32,31 @@ export class LanguageServiceDefaultsImpl implements monaco.languages.yaml.Langua
 		return this._languageId;
 	}
 
-	get diagnosticsOptions(): monaco.languages.yaml.DiagnosticsOptions {
+	get diagnosticsOptions(): monaco.languages.moss.DiagnosticsOptions {
 		return this._diagnosticsOptions;
 	}
 
-	setDiagnosticsOptions(options: monaco.languages.yaml.DiagnosticsOptions): void {
+	setDiagnosticsOptions(options: monaco.languages.moss.DiagnosticsOptions): void {
 		this._diagnosticsOptions = options || Object.create(null);
 		this._onDidChange.fire(this);
 	}
 }
 
-const diagnosticDefault: monaco.languages.yaml.DiagnosticsOptions = {
+const diagnosticDefault: monaco.languages.moss.DiagnosticsOptions = {
 	validate: true,
 	schemas: []
 }
 
-const yamlDefaults = new LanguageServiceDefaultsImpl('yaml', diagnosticDefault);
+const mossDefaults = new LanguageServiceDefaultsImpl('moss', diagnosticDefault);
 
 
 // Export API
-function createAPI(): typeof monaco.languages.yaml {
+function createAPI(): typeof monaco.languages.moss {
 	return {
-		yamlDefaults: yamlDefaults,
+		mossDefaults
 	}
 }
-monaco.languages.yaml = createAPI();
+monaco.languages.moss = createAPI();
 
 // --- Registration to monaco editor ---
 
@@ -71,5 +71,5 @@ monaco.languages.register({
 	mimetypes: ['application/x-moss']
 });
 monaco.languages.onLanguage('moss', () => {
-	withMode(mode => mode.setupMode(yamlDefaults));
+	withMode(mode => mode.setupMode(mossDefaults));
 });

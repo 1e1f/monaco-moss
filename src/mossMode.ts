@@ -33,6 +33,6 @@ export function setupMode(defaults: LanguageServiceDefaultsImpl): void {
 	disposables.push(monaco.languages.registerDocumentFormattingEditProvider(languageId, new languageFeatures.DocumentFormattingEditProvider(worker)));
 	disposables.push(monaco.languages.registerDocumentRangeFormattingEditProvider(languageId, new languageFeatures.DocumentRangeFormattingEditProvider(worker)));
 	disposables.push(new languageFeatures.DiagnosticsAdapter(languageId, worker, defaults));
-	disposables.push(monaco.languages.setTokensProvider(languageId, tokenProvider));
-	disposables.push(monaco.languages.setLanguageConfiguration(languageId, languageConf));
+	disposables.push(monaco.languages.setMonarchTokensProvider(languageId, tokenProvider as any));
+	disposables.push(monaco.languages.setLanguageConfiguration(languageId, languageConf as any));
 }

@@ -9,7 +9,7 @@ import * as Json from 'jsonc-parser';
 import {JSONSchema, JSONSchemaMap} from '../jsonSchema';
 import URI from 'vscode-uri';
 import * as Strings from '../utils/strings';
-import {SchemaRequestService, WorkspaceContextService, PromiseConstructor, Thenable} from '../yamlLanguageService';
+import {SchemaRequestService, WorkspaceContextService, PromiseConstructor, Thenable} from '../mossLanguageService';
 
 
 import * as nls from 'vscode-nls';

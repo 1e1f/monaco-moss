@@ -1,9 +1,9 @@
 {
   "name": "monaco-moss",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Moss plugin for the Monaco Editor, derived from monaco-yaml",
   "scripts": {
-    "compile": "rimraf ./out && tsc -p ./src/tsconfig.json && tsc -p ./src/tsconfig.esm.json",
+    "compile": "rimraf ./out && tsc -p ./tsconfig.json && tsc -p ./tsconfig.esm.json",
     "watch": "tsc -p ./src --watch",
     "prepublish": "rimraf ./release && yarn run compile && node ./scripts/release.js && node ./scripts/bundle && mcopy ./src/monaco.d.ts ./release/monaco.d.ts"
   },
@@ -24,14 +24,14 @@
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.9.3",
     "js-yaml": "^3.12.0",
-    "js-moss": "^0.11.3",
+    "js-moss": "^0.12.5",
     "jsonc-parser": "^2.0.2",
     "monaco-editor-core": "0.14.6",
     "monaco-languages": "1.5.1",
     "monaco-plugin-helpers": "^1.0.2",
     "requirejs": "^2.3.5",
     "rimraf": "^2.6.2",
-    "typescript": "^3.0.3",
+    "typescript": "^3.1.6",
     "uglify-es": "^3.3.9",
     "vscode-json-languageservice": "^3.1.6",
     "vscode-languageserver-types": "3.12.0"

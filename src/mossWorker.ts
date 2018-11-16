@@ -11,17 +11,17 @@ import Thenable = monaco.Thenable;
 import IWorkerContext = monaco.worker.IWorkerContext;
 
 import * as ls from 'vscode-languageserver-types';
-import * as yamlService from './languageservice/yamlLanguageService';
-import { SchemaRequestService } from './languageservice/yamlLanguageService';
+import * as mossService from './languageservice/mossLanguageService';
+import { SchemaRequestService } from './languageservice/mossLanguageService';
 
-class PromiseAdapter<T> implements yamlService.Thenable<T> {
+class PromiseAdapter<T> implements mossService.Thenable<T> {
 	private wrapped: monaco.Promise<T>;
 
-	constructor(executor: (resolve: (value?: T | yamlService.Thenable<T>) => void, reject: (reason?: any) => void) => void) {
+	constructor(executor: (resolve: (value?: T | mossService.Thenable<T>) => void, reject: (reason?: any) => void) => void) {
 		this.wrapped = new monaco.Promise<T>(executor);
 	}
-	public then<TResult>(onfulfilled?: (value: T) => TResult | yamlService.Thenable<TResult>, onrejected?: (reason: any) => void): yamlService.Thenable<TResult> {
-		let thenable : yamlService.Thenable<T> = this.wrapped;
+	public then<TResult>(onfulfilled?: (value: T) => TResult | mossService.Thenable<TResult>, onrejected?: (reason: any) => void): mossService.Thenable<TResult> {
+		let thenable: mossService.Thenable<T> = this.wrapped;
 		return thenable.then(onfulfilled, onrejected);
 	}
 	public getWrapped(): monaco.Thenable<T> {
@@ -30,56 +30,58 @@ class PromiseAdapter<T> implements yamlService.Thenable<T> {
 	public cancel(): void {
 		this.wrapped.cancel();
 	}
-	public static resolve<T>(v: T | Thenable<T>): yamlService.Thenable<T> {
-		return <monaco.Thenable<T>> monaco.Promise.as(v);
+	public static resolve<T>(v: T | Thenable<T>): mossService.Thenable<T> {
+		return <monaco.Thenable<T>>monaco.Promise.as(v);
 	}
-	public static reject<T>(v: T): yamlService.Thenable<T> {
+	public static reject<T>(v: T): mossService.Thenable<T> {
 		return monaco.Promise.wrapError(<any>v);
 	}
-	public static all<T>(values: yamlService.Thenable<T>[]): yamlService.Thenable<T[]> {
+	public static all<T>(values: mossService.Thenable<T>[]): mossService.Thenable<T[]> {
 		return monaco.Promise.join(values);
 	}
 }
 
 // Currently we only support loading schemas via xhr:
 const ajax = (url: string) =>
-  new Promise((resolve, reject) => {
+	new Promise((resolve, reject) => {
 		const request = new XMLHttpRequest();
-    request.onreadystatechange = () => {
-      if (request.readyState === XMLHttpRequest.DONE) {
-        const response = request.responseText;
-        if (request.status < 400) {
-          resolve(response);
-        } else {
-          reject(response);
-        }
-      }
-    };
-    request.onerror = reject;
+		request.onreadystatechange = () => {
+			if (request.readyState === XMLHttpRequest.DONE) {
+				const response = request.responseText;
+				if (request.status < 400) {
+					resolve(response);
+				} else {
+					reject(response);
+				}
+			}
+		};
+		request.onerror = reject;
 		request.open('GET', url);
-    request.send();
+		request.send();
 	});
 
 export class MossWorker {
 
 	private _ctx: IWorkerContext;
-	private _languageService: yamlService.LanguageService;
-	private _languageSettings: yamlService.LanguageSettings;
+	private _languageService: mossService.LanguageService;
+	private _languageSettings: mossService.LanguageSettings;
 	private _languageId: string;
 
 	constructor(ctx: IWorkerContext, createData: ICreateData) {
 		this._ctx = ctx;
 		this._languageSettings = createData.languageSettings;
 		this._languageId = createData.languageId;
-		this._languageService = yamlService.getLanguageService(ajax, null, [], null, PromiseAdapter);
+		this._languageService = mossService.getLanguageService(ajax, null, [], null, PromiseAdapter);
+		console.log('construct moss worker', this._languageSettings)
 		this._languageService.configure(this._languageSettings);
 	}
 
 	doValidation(uri: string): Thenable<ls.Diagnostic[]> {
 		let document = this._getTextDocument(uri);
 		if (document) {
-			let yamlDocument = this._languageService.parseYAMLDocument(document);
-			return this._languageService.doValidation(document, yamlDocument);
+			return (this._languageService.parseDocument(document)).then((yamlDocument) => {
+				return this._languageService.doValidation(document, yamlDocument);
+			})
 		}
 		return Promise.as([]);
 	}
@@ -87,7 +89,7 @@ export class MossWorker {
 	doComplete(uri: string, position: ls.Position): Thenable<ls.CompletionList> {
 		let document = this._getTextDocument(uri);
 		let completionFix = completionHelper(document, position);
-		let yamlDocument = this._languageService.parseYAMLDocument(document);
+		let yamlDocument = this._languageService.parseDocument(document);
 		return this._languageService.doComplete(document, position, yamlDocument);
 	}
 	doResolve(item: ls.CompletionItem): Thenable<ls.CompletionItem> {
@@ -95,7 +97,7 @@ export class MossWorker {
 	}
 	doHover(uri: string, position: ls.Position): Thenable<ls.Hover> {
 		let document = this._getTextDocument(uri);
-		let yamlDocument = this._languageService.parseYAMLDocument(document)
+		let yamlDocument = this._languageService.parseDocument(document)
 		return this._languageService.doHover(document, position, yamlDocument);
 	}
 	format(uri: string, range: ls.Range, options: ls.FormattingOptions): Thenable<ls.TextEdit[]> {
@@ -108,10 +110,11 @@ export class MossWorker {
 	}
 	findDocumentSymbols(uri: string): Thenable<ls.SymbolInformation[]> {
 		let document = this._getTextDocument(uri);
-		let yamlDocument = this._languageService.parseYAMLDocument(document);
+		let yamlDocument = this._languageService.parseDocument(document);
 		let symbols = this._languageService.findDocumentSymbols(document, yamlDocument);
 		return Promise.as(symbols);
 	}
+
 	private _getTextDocument(uri: string): ls.TextDocument {
 		let models = this._ctx.getMirrorModels();
 		for (let model of models) {
@@ -125,11 +128,11 @@ export class MossWorker {
 
 export interface ICreateData {
 	languageId: string;
-	languageSettings: yamlService.LanguageSettings;
+	languageSettings: mossService.LanguageSettings;
 	schemaRequestService?: SchemaRequestService;
 }
 
-export function create(ctx: IWorkerContext, createData: ICreateData): YAMLWorker {
+export function create(ctx: IWorkerContext, createData: ICreateData): MossWorker {
 	return new MossWorker(ctx, createData);
 }
 

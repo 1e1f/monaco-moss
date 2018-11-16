@@ -5,7 +5,7 @@
 'use strict';
 
 import { LanguageServiceDefaultsImpl } from './monaco.contribution';
-import { YAMLWorker } from './yamlWorker';
+import { MossWorker } from './mossWorker';
 
 import Promise = monaco.Promise;
 import IDisposable = monaco.IDisposable;
@@ -20,8 +20,8 @@ export class WorkerManager {
 	private _lastUsedTime: number;
 	private _configChangeListener: IDisposable;
 
-	private _worker: monaco.editor.MonacoWebWorker<YAMLWorker>;
-	private _client: Promise<YAMLWorker>;
+	private _worker: monaco.editor.MonacoWebWorker<MossWorker>;
+	private _client: Promise<MossWorker>;
 
 	constructor(defaults: LanguageServiceDefaultsImpl) {
 		this._defaults = defaults;
@@ -55,14 +55,14 @@ export class WorkerManager {
 		}
 	}
 
-	private _getClient(): Promise<YAMLWorker> {
+	private _getClient(): Promise<MossWorker> {
 		this._lastUsedTime = Date.now();
 
 		if (!this._client) {
-			this._worker = monaco.editor.createWebWorker<YAMLWorker>({
+			this._worker = monaco.editor.createWebWorker<MossWorker>({
 
-				// module that exports the create() method and returns a `YAMLWorker` instance
-				moduleId: 'vs/language/yaml/yamlWorker',
+				// module that exports the create() method and returns a `MossWorker` instance
+				moduleId: 'vs/language/moss/mossWorker',
 
 				label: this._defaults.languageId,
 
@@ -79,8 +79,8 @@ export class WorkerManager {
 		return this._client;
 	}
 
-	getLanguageServiceWorker(...resources: Uri[]): Promise<YAMLWorker> {
-		let _client: YAMLWorker;
+	getLanguageServiceWorker(...resources: Uri[]): Promise<MossWorker> {
+		let _client: MossWorker;
 		return toShallowCancelPromise(
 			this._getClient().then((client) => {
 				_client = client

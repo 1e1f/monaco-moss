@@ -5,7 +5,7 @@
 'use strict';
 
 import { LanguageServiceDefaultsImpl } from './monaco.contribution';
-import { YAMLWorker } from './yamlWorker';
+import { MossWorker } from './mossWorker';
 
 import * as ls from 'vscode-languageserver-types';
 
@@ -20,7 +20,7 @@ import IDisposable = monaco.IDisposable;
 
 
 export interface WorkerAccessor {
-	(...more: Uri[]): Thenable<YAMLWorker>
+	(...more: Uri[]): Thenable<MossWorker>
 }
 
 // --- diagnostics --- ---
@@ -102,6 +102,7 @@ export class DiagnosticsAdapter {
 	private _doValidate(resource: Uri, languageId: string): void {
 		this._worker(resource).then(worker => {
 			return worker.doValidation(resource.toString()).then(diagnostics => {
+				console.log('diagnostics:', diagnostics)
 				const markers = diagnostics.map(d => toDiagnostics(resource, d));
 				let model = monaco.editor.getModel(resource);
 				if (model.getModeId() === languageId) {

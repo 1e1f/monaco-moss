@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-declare module monaco.languages.yaml {
+declare module monaco.languages.moss {
     export interface DiagnosticsOptions {
       /**
        * If set, the validator will be enabled and perform syntax validation as well as schema based validation.
@@ -35,5 +35,5 @@ declare module monaco.languages.yaml {
       setDiagnosticsOptions(options: DiagnosticsOptions): void;
     }
 
-    export var yamlDefaults: LanguageServiceDefaults;
+    export var mossDefaults: LanguageServiceDefaults;
   }

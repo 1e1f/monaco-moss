@@ -83,7 +83,7 @@ export class SingleYAMLDocument extends JSONDocument {
 }
 
 
-function recursivelyBuildAst(parent: ASTNode, node: Yaml.YAMLNode): ASTNode {
+export function recursivelyBuildAst(parent: ASTNode, node: Yaml.YAMLNode): ASTNode {
 
 	if (!node) {
 		return;
@@ -198,11 +198,11 @@ function recursivelyBuildAst(parent: ASTNode, node: Yaml.YAMLNode): ASTNode {
 	}
 }
 
-function convertError(e: YAMLException) {
+export function convertError(e: YAMLException) {
 	return { message: `${e.reason}`, location: { start: e.mark.position, end: e.mark.position + e.mark.column, code: ErrorCode.Undefined } }
 }
 
-function createJSONDocument(yamlDoc: Yaml.YAMLNode, startPositions: number[], text: string) {
+export function createJSONDocument(yamlDoc: Yaml.YAMLNode, startPositions: number[], text: string) {
 	let _doc = new SingleYAMLDocument(startPositions);
 	_doc.root = recursivelyBuildAst(null, yamlDoc)
 
