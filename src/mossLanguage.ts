@@ -185,12 +185,12 @@ export const tokenProvider = {
 
     [/(".*?"|'.*?'|.*?)([ \t]*)(:)( |$)/, [{
       cases: {
-        '.*<>?': 'number',
+        '.*<>?': 'function',
         '.*>': 'key',
-        '\\$.*': 'key',
-        '[=|+].*': 'key',
+        '\\$.*': 'variable',
+        '[=|+].*': 'selector',
         '-[a-z]': 'key',
-        '@default': 'type'
+        '@default': 'key'
       }
     }, 'white', 'operators', 'white']],
     {
@@ -198,10 +198,10 @@ export const tokenProvider = {
     },
     { include: '@flowFunctions' },
     [keywords.join('|'), 'keyword'],
-    [/\$.*/, 'key'],
+    [/\$.*/, 'variable'],
     // String nodes
-    [/[.a-zA-Z0-9\"]+$/, {cases: {'@keywords': 'keyword', '@default': 'string'}}],
-    [/(.+)(?=\${)/, {cases: {'@keywords': 'keyword', '@default': 'string'}}]
+    [/[.a-zA-Z0-9\"]+$/, { cases: { '@keywords': 'keyword', '@default': 'string' } }],
+    [/(.+)(?=\${)/, { cases: { '@keywords': 'keyword', '@default': 'string' } }]
     ],
     ////
     // Flow Collection: Flow Mapping
@@ -228,7 +228,7 @@ export const tokenProvider = {
         '.*<>?': 'number',
         '.*>': 'key',
         '\\$.*': 'key',
-        '@default': 'type'
+        '@default': 'key'
       }
     }],
 
@@ -253,10 +253,10 @@ export const tokenProvider = {
       include: '@flowNumber'
     },
     [keywords.join('|'), 'keyword'],
-    // [/\$[a-z]*/, 'string'],
-    // [/$[0-9]*/, 'number']
-    // [/.*?/, 'string']
-    // [/./, 'string']
+      // [/\$[a-z]*/, 'string'],
+      // [/$[0-9]*/, 'number']
+      // [/.*?/, 'string']
+      // [/./, 'string']
     ],
 
 
@@ -360,7 +360,7 @@ export const tokenProvider = {
       {
         include: '@inStringFunctions'
       },
-      [/[^}]/, 'key'],
+      [/[^}]/, 'variable'],
       [/\}/, '@brackets', '@pop'],
     ],
 

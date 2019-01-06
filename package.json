@@ -1,6 +1,6 @@
 {
   "name": "monaco-moss",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Moss plugin for the Monaco Editor, derived from monaco-yaml",
   "scripts": {
     "compile": "rimraf ./out && tsc -p ./tsconfig.json && tsc -p ./tsconfig.esm.json",
