@@ -60,12 +60,9 @@ export class WorkerManager {
 
 		if (!this._client) {
 			this._worker = monaco.editor.createWebWorker<MossWorker>({
-
 				// module that exports the create() method and returns a `MossWorker` instance
 				moduleId: 'vs/language/moss/mossWorker',
-
 				label: this._defaults.languageId,
-
 				// passed in to the create() method
 				createData: {
 					languageSettings: this._defaults.diagnosticsOptions,

@@ -20,20 +20,21 @@
     "url": "https://github.com/1e1f/monaco-moss/issues"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^10.9.3",
-    "js-yaml": "^3.12.0",
-    "js-moss": "^0.12.5",
-    "jsonc-parser": "^2.0.2",
-    "monaco-editor-core": "0.14.6",
-    "monaco-languages": "1.5.1",
+    "@types/chai": "^4.1",
+    "@types/mocha": "^5.2",
+    "@types/node": "^10",
+    "js-yaml": "^3.12",
+    "js-moss": "^0.16",
+    "jsonc-parser": "^2.0",
+    "monaco-editor-core": "^0.15.5",
+    "monaco-languages": "^1.6",
     "monaco-plugin-helpers": "^1.0.2",
-    "requirejs": "^2.3.5",
-    "rimraf": "^2.6.2",
-    "typescript": "^3.1.6",
-    "uglify-es": "^3.3.9",
-    "vscode-json-languageservice": "^3.1.6",
-    "vscode-languageserver-types": "3.12.0"
+    "requirejs": "^2.3",
+    "rimraf": "^2.6",
+    "typescript": "^3.1",
+    "uglify-es": "^3.3",
+    "vscode-nls": "^4",
+    "vscode-json-languageservice": "^3.2",
+    "vscode-languageserver-types": "3.14"
   }
 }

@@ -67,7 +67,7 @@ function withMode(callback: (module: typeof mode) => void): void {
 monaco.languages.register({
 	id: 'moss',
 	extensions: ['.moss'],
-	aliases: ['MOSS', 'moss'],
+	aliases: ['Moss', 'moss'],
 	mimetypes: ['application/x-moss']
 });
 monaco.languages.onLanguage('moss', () => {

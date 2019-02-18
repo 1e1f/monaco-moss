@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
+import * as ls from 'vscode-languageserver-types';
+
 import { LanguageServiceDefaultsImpl } from './monaco.contribution';
 import { MossWorker } from './mossWorker';
-
-import * as ls from 'vscode-languageserver-types';
 
 import Uri = monaco.Uri;
 import Position = monaco.Position;
@@ -20,7 +20,7 @@ import IDisposable = monaco.IDisposable;
 
 
 export interface WorkerAccessor {
-	(...more: Uri[]): Thenable<MossWorker>
+	(...more: Uri[]): Promise<MossWorker>
 }
 
 // --- diagnostics --- ---
@@ -101,14 +101,15 @@ export class DiagnosticsAdapter {
 
 	private _doValidate(resource: Uri, languageId: string): void {
 		this._worker(resource).then(worker => {
-			return worker.doValidation(resource.toString()).then(diagnostics => {
-				// console.log('diagnostics:', diagnostics)
-				const markers = diagnostics.map(d => toDiagnostics(resource, d));
-				let model = monaco.editor.getModel(resource);
-				if (model.getModeId() === languageId) {
-					monaco.editor.setModelMarkers(model, languageId, markers);
-				}
-			});
+			console.log({ worker: Object.keys(worker) });
+			return worker.doValidation(resource.toString())
+		}).then(diagnostics => {
+			// console.log('diagnostics:', diagnostics)
+			const markers = diagnostics.map(d => toDiagnostics(resource, d));
+			let model = monaco.editor.getModel(resource);
+			if (model.getModeId() === languageId) {
+				monaco.editor.setModelMarkers(model, languageId, markers);
+			}
 		}).then(undefined, err => {
 			console.error(err);
 		});

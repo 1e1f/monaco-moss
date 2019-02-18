@@ -3,6 +3,8 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+'use strict';
+
 import { JSONSchemaService } from "./services/jsonSchemaService";
 import {
   TextDocument,
@@ -11,60 +13,27 @@ import {
   FormattingOptions,
   Diagnostic
 } from "vscode-languageserver-types";
+import { JSONWorkerContribution } from './jsonContributions';
 import { JSONSchema } from "./jsonSchema";
 import { MossDocumentSymbols } from "./services/documentSymbols";
 import { MossCompletion } from "./services/mossCompletion";
+import { MossFormatter } from './services/mossFormatter';
 import { JSONDocument } from "vscode-json-languageservice";
 import { MossHover } from "./services/mossHover";
 import { MossValidation } from "./services/mossValidation";
-import { format } from "./services/mossFormatter";
 import { parse as parseMoss } from "./parser/mossParser";
 // import { parse as parseYaml } from "./parser/yamlParser";
+
 export interface LanguageSettings {
-  validate?: boolean; //Setting for whether we want to validate the schema
-  isKubernetes?: boolean; //If true then its validating against kubernetes
-  schemas?: any[]; //List of schemas,
-  customTags?: Array<String>; //Array of Custom Tags
+  validate?: boolean; // Setting for whether we want to validate the schema
+  hover?: boolean; // Setting for whether we want to have hover results
+  completion?: boolean; // Setting for whether we want to have completion results
+  isKubernetes?: boolean; // If true then its validating against kubernetes
+  schemas?: any[]; // List of schemas,
+  customTags?: string[]; // Array of Custom Tags
 }
 
 export type MossDocument = { documents: JSONDocument[] };
-
-export interface PromiseConstructor {
-  /**
-   * Creates a new Promise.
-   * @param executor A callback used to initialize the promise. This callback is passed two arguments:
-   * a resolve callback used resolve the promise with a value or the result of another promise,
-   * and a reject callback used to reject the promise with a provided reason or error.
-   */
-  new <T>(
-    executor: (
-      resolve: (value?: T | Thenable<T>) => void,
-      reject: (reason?: any) => void
-    ) => void
-  ): Thenable<T>;
-
-  /**
-   * Creates a Promise that is resolved with an array of results when all of the provided Promises
-   * resolve, or rejected when any Promise is rejected.
-   * @param values An array of Promises.
-   * @returns A new Promise.
-   */
-  all<T>(values: Array<T | Thenable<T>>): Thenable<T[]>;
-  /**
-   * Creates a new rejected promise for the provided reason.
-   * @param reason The reason the promise was rejected.
-   * @returns A new rejected Promise.
-   */
-  reject<T>(reason: any): Thenable<T>;
-
-  /**
-    * Creates a new resolved promise for the provided value.
-    * @param value A promise.
-    * @returns A promise whose internal state matches the provided promise.
-    */
-  resolve<T>(value: T | Thenable<T>): Thenable<T>;
-
-}
 
 export interface Thenable<R> {
   /**
@@ -122,35 +91,95 @@ export interface LanguageService {
   parseDocument(document: TextDocument): Promise<MossDocument>;
 }
 
-export function getLanguageService(schemaRequestService, workspaceContext, contributions, customSchemaProvider, promiseConstructor?): LanguageService {
-  let promise = promiseConstructor || Promise;
+export function getLanguageService(
+  schemaRequestService: SchemaRequestService,
+  workspaceContext: WorkspaceContextService,
+  contributions: JSONWorkerContribution[]
+): LanguageService {
+  const schemaService = new JSONSchemaService(
+    schemaRequestService,
+    workspaceContext
+  );
 
-  let schemaService = new JSONSchemaService(schemaRequestService, workspaceContext, customSchemaProvider);
-
-  let completer = new MossCompletion(schemaService, contributions, promise);
-  let hover = new MossHover(schemaService, contributions, promise);
-  let mossDocumentSymbols = new MossDocumentSymbols();
-  let mossValidation = new MossValidation(schemaService, promise);
+  let completer = new MossCompletion(schemaService, contributions);
+  let hover = new MossHover(schemaService, contributions);
+  const mossDocumentSymbols = new MossDocumentSymbols(schemaService);
+  const mossValidation = new MossValidation(schemaService);
+  const mossFormatter = new MossFormatter();
 
   return {
-    configure: (settings) => {
+    configure: settings => {
       schemaService.clearExternalSchemas();
       if (settings.schemas) {
         settings.schemas.forEach(settings => {
-          schemaService.registerExternalSchema(settings.uri, settings.fileMatch, settings.schema);
+          schemaService.registerExternalSchema(
+            settings.uri,
+            settings.fileMatch,
+            settings.schema
+          );
         });
       }
+
       mossValidation.configure(settings);
-      let customTagsSetting = settings && settings["customTags"] ? settings["customTags"] : [];
-      completer.configure(customTagsSetting);
+      hover.configure(settings);
+      completer.configure(settings);
+      mossFormatter.configure(settings);
+    },
+    registerCustomSchemaProvider: (schemaProvider: CustomSchemaProvider) => {
+      schemaService.registerCustomSchemaProvider(schemaProvider);
     },
     doComplete: completer.doComplete.bind(completer),
     doResolve: completer.doResolve.bind(completer),
     doValidation: mossValidation.doValidation.bind(mossValidation),
     doHover: hover.doHover.bind(hover),
-    findDocumentSymbols: mossDocumentSymbols.findDocumentSymbols.bind(mossDocumentSymbols),
+    findDocumentSymbols: mossDocumentSymbols.findDocumentSymbols.bind(
+      mossDocumentSymbols
+    ),
+    findDocumentColors: mossDocumentSymbols.findDocumentColors.bind(
+      mossDocumentSymbols
+    ),
+    getColorPresentations: mossDocumentSymbols.getColorPresentations.bind(
+      mossDocumentSymbols
+    ),
     resetSchema: (uri: string) => schemaService.onResourceChange(uri),
-    doFormat: format,
-    parseDocument: (document: TextDocument) => parseMoss(document.getText())
-  }
+    doFormat: mossFormatter.doFormat.bind(mossFormatter),
+    parseMossDocument: (document: TextDocument) =>
+      parseMoss(document.getText()),
+  };
 }
+
+// export function getLanguageService(
+//   schemaRequestService, 
+//   workspaceContext, 
+//   contributions, customSchemaProvider, promiseConstructor?): LanguageService {
+//   let promise = promiseConstructor || Promise;
+
+//   let schemaService = new JSONSchemaService(schemaRequestService, workspaceContext, customSchemaProvider);
+
+//   let completer = new MossCompletion(schemaService, contributions, promise);
+//   let hover = new MossHover(schemaService, contributions, promise);
+//   let mossDocumentSymbols = new MossDocumentSymbols();
+//   let mossValidation = new MossValidation(schemaService, promise);
+
+//   return {
+//     configure: (settings) => {
+//       schemaService.clearExternalSchemas();
+//       if (settings.schemas) {
+//         settings.schemas.forEach(settings => {
+//           schemaService.registerExternalSchema(settings.uri, settings.fileMatch, settings.schema);
+//         });
+//       }
+//       mossValidation.configure(settings);
+//       let customTagsSetting = settings && settings["customTags"] ? settings["customTags"] : [];
+//       completer.configure(customTagsSetting);
+//     },
+//     doComplete: completer.doComplete.bind(completer),
+//     doResolve: completer.doResolve.bind(completer),
+//     doValidation: mossValidation.doValidation.bind(mossValidation),
+//     doHover: hover.doHover.bind(hover),
+//     findDocumentSymbols: mossDocumentSymbols.findDocumentSymbols.bind(mossDocumentSymbols),
+//     resetSchema: (uri: string) => schemaService.onResourceChange(uri),
+//     doFormat: format,
+//     parseDocument: (document: TextDocument) => parseMoss(document.getText())
+//   }
+// }

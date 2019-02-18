@@ -188,7 +188,7 @@ export const tokenProvider = {
         '.*<>?': 'function',
         '.*>': 'key',
         '\\$.*': 'variable',
-        '[=|+].*': 'selector',
+        '<[=\\-+\\*\\^\\|&].*': 'selector',
         '-[a-z]': 'key',
         '@default': 'key'
       }
@@ -355,7 +355,7 @@ export const tokenProvider = {
       [/\{/, '@brackets', '@object']
     ],
 
-    // MOSS
+    // Moss
     explicitInterpolate: [
       {
         include: '@inStringFunctions'
