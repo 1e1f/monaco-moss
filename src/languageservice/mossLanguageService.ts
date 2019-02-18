@@ -5,24 +5,34 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-import { JSONSchemaService } from "./services/jsonSchemaService";
 import {
-  TextDocument,
-  Position,
+  Color,
+  ColorInformation,
+  ColorPresentation,
+  CompletionItem,
   CompletionList,
+  Diagnostic,
+  DocumentSymbol,
   FormattingOptions,
-  Diagnostic
-} from "vscode-languageserver-types";
+  Position,
+  Range,
+  TextDocument,
+  TextEdit,
+} from 'vscode-languageserver-types';
 import { JSONWorkerContribution } from './jsonContributions';
-import { JSONSchema } from "./jsonSchema";
-import { MossDocumentSymbols } from "./services/documentSymbols";
-import { MossCompletion } from "./services/mossCompletion";
+import { JSONSchema } from './jsonSchema';
+import { MossDocumentSymbols } from './services/documentSymbols';
+import {
+  CustomSchemaProvider,
+  JSONSchemaService,
+} from './services/jsonSchemaService';
+import { MossCompletion } from './services/mossCompletion';
 import { MossFormatter } from './services/mossFormatter';
-import { JSONDocument } from "vscode-json-languageservice";
-import { MossHover } from "./services/mossHover";
-import { MossValidation } from "./services/mossValidation";
+import { MossHover } from './services/mossHover';
+import { MossValidation } from './services/mossValidation';
+import { MossDocument } from './mossLanguageTypes';
+
 import { parse as parseMoss } from "./parser/mossParser";
-// import { parse as parseYaml } from "./parser/yamlParser";
 
 export interface LanguageSettings {
   validate?: boolean; // Setting for whether we want to validate the schema
@@ -32,8 +42,6 @@ export interface LanguageSettings {
   schemas?: any[]; // List of schemas,
   customTags?: string[]; // Array of Custom Tags
 }
-
-export type MossDocument = { documents: JSONDocument[] };
 
 export interface Thenable<R> {
   /**
@@ -81,14 +89,25 @@ export interface SchemaConfiguration {
 
 export interface LanguageService {
   configure(settings): void;
+  registerCustomSchemaProvider(schemaProvider: CustomSchemaProvider): void; // Register a custom schema provider
   doComplete(document: TextDocument, position: Position, doc): Thenable<CompletionList>;
   doValidation(document: TextDocument, mossDocument): Thenable<Diagnostic[]>;
   doHover(document: TextDocument, position: Position, doc);
   findDocumentSymbols(document: TextDocument, doc);
-  doResolve(completionItem);
+  findDocumentColors(
+    document: TextDocument,
+    doc: MossDocument
+  ): Thenable<ColorInformation[]>;
+  getColorPresentations(
+    document: TextDocument,
+    doc: MossDocument,
+    color: Color,
+    range: Range
+  ): ColorPresentation[];
+  doResolve(completionItem: CompletionItem): Thenable<CompletionItem>;
   resetSchema(uri: string): boolean;
   doFormat(document: TextDocument, options: FormattingOptions, customTags: Array<String>);
-  parseDocument(document: TextDocument): Promise<MossDocument>;
+  parseMossDocument(document: TextDocument): Promise<MossDocument>;
 }
 
 export function getLanguageService(
@@ -144,7 +163,7 @@ export function getLanguageService(
     resetSchema: (uri: string) => schemaService.onResourceChange(uri),
     doFormat: mossFormatter.doFormat.bind(mossFormatter),
     parseMossDocument: (document: TextDocument) =>
-      parseMoss(document.getText()),
+      parseMoss(document.getText()) as any
   };
 }
 

@@ -15,7 +15,7 @@ import * as mossService from './languageservice/mossLanguageService';
 
 let defaultSchemaRequestService;
 if (typeof fetch !== 'undefined') {
-  defaultSchemaRequestService = function(url) {
+  defaultSchemaRequestService = function (url) {
     return fetch(url).then(response => response.text());
   };
 }
@@ -45,8 +45,8 @@ export class MossWorker {
   public doValidation(uri: string): Thenable<ls.Diagnostic[]> {
     const document = this._getTextDocument(uri);
     if (document) {
-      const yamlDocument = this._languageService.parseMossDocument(document);
-      return this._languageService.doValidation(document, yamlDocument);
+      const mossDocument = this._languageService.parseMossDocument(document);
+      return this._languageService.doValidation(document, mossDocument);
     }
     return Promise.as([]);
   }
@@ -55,16 +55,16 @@ export class MossWorker {
     position: ls.Position
   ): Thenable<ls.CompletionList> {
     const document = this._getTextDocument(uri);
-    const yamlDocument = this._languageService.parseMossDocument(document);
-    return this._languageService.doComplete(document, position, yamlDocument);
+    const mossDocument = this._languageService.parseMossDocument(document);
+    return this._languageService.doComplete(document, position, mossDocument);
   }
   public doResolve(item: ls.CompletionItem): Thenable<ls.CompletionItem> {
     return this._languageService.doResolve(item);
   }
   public doHover(uri: string, position: ls.Position): Thenable<ls.Hover> {
     const document = this._getTextDocument(uri);
-    const yamlDocument = this._languageService.parseMossDocument(document);
-    return this._languageService.doHover(document, position, yamlDocument);
+    const mossDocument = this._languageService.parseMossDocument(document);
+    return this._languageService.doHover(document, position, mossDocument);
   }
   public format(
     uri: string,
@@ -80,21 +80,22 @@ export class MossWorker {
   }
   public findDocumentSymbols(uri: string): Thenable<ls.DocumentSymbol[]> {
     const document = this._getTextDocument(uri);
-    const yamlDocument = this._languageService.parseMossDocument(document);
+    const mossDocument = this._languageService.parseMossDocument(document);
     const symbols = this._languageService.findDocumentSymbols(
       document,
-      yamlDocument
+      mossDocument
     );
     return Promise.as(symbols);
   }
   public findDocumentColors(uri: string): Thenable<ls.ColorInformation[]> {
     const document = this._getTextDocument(uri);
-    const stylesheet = this._languageService.parseMossDocument(document);
-    const colorSymbols = this._languageService.findDocumentColors(
-      document,
-      stylesheet
-    );
-    return Promise.as(colorSymbols);
+    return this._languageService.parseMossDocument(document).then((stylesheet) => {
+      const colorSymbols = this._languageService.findDocumentColors(
+        document,
+        stylesheet
+      );
+      return Promise.as(colorSymbols);
+    });
   }
   public getColorPresentations(
     uri: string,
@@ -102,14 +103,15 @@ export class MossWorker {
     range: ls.Range
   ): Thenable<ls.ColorPresentation[]> {
     const document = this._getTextDocument(uri);
-    const stylesheet = this._languageService.parseMossDocument(document);
-    const colorPresentations = this._languageService.getColorPresentations(
-      document,
-      stylesheet,
-      color,
-      range
-    );
-    return Promise.as(colorPresentations);
+    return this._languageService.parseMossDocument(document).then((stylesheet) => {
+      const colorPresentations = this._languageService.getColorPresentations(
+        document,
+        stylesheet,
+        color,
+        range
+      );
+      return Promise.as(colorPresentations);
+    })
   }
   private _getTextDocument(uri: string): ls.TextDocument {
     const models = this._ctx.getMirrorModels();

@@ -5,94 +5,123 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
+import {
+	DiagnosticSeverity,
+	TextDocument,
+	Diagnostic,
+} from 'vscode-languageserver-types';
+import { LanguageSettings } from '../mossLanguageService';
+import { MossDocument } from '../mossLanguageTypes';
 import { JSONSchemaService, ResolvedSchema } from './jsonSchemaService';
-import { JSONDocument, ObjectASTNode, IProblem, ProblemSeverity } from '../parser/jsonParser';
-import { TextDocument, Diagnostic, DiagnosticSeverity } from 'vscode-languageserver-types';
-import { PromiseConstructor, Thenable, LanguageSettings } from '../mossLanguageService';
+import { Thenable } from '../jsonLanguageTypes';
 
 export class MossValidation {
-
-	private jsonSchemaService: JSONSchemaService;
-	private promise: PromiseConstructor;
-	private comments: boolean;
 	private validationEnabled: boolean;
-
-	public constructor(jsonSchemaService, promiseConstructor) {
-		this.jsonSchemaService = jsonSchemaService;
-		this.promise = promiseConstructor;
+	public constructor(private jsonSchemaService: JSONSchemaService) {
 		this.validationEnabled = true;
 	}
 
-	public configure(shouldValidate: LanguageSettings) {
-		if (shouldValidate) {
-			this.validationEnabled = shouldValidate.validate;
+	public configure(raw: LanguageSettings) {
+		if (raw) {
+			this.validationEnabled = raw.validate !== false;
 		}
 	}
 
-	public doValidation(textDocument, mossDocument) {
+	public doValidation(
+		textDocument: TextDocument,
+		yamlDocument: MossDocument
+	): Thenable<Diagnostic[]> {
 		if (!this.validationEnabled) {
-			return this.promise.resolve([]);
+			return Promise.resolve([]);
 		}
-
-		return this.jsonSchemaService.getSchemaForResource(textDocument.uri).then(function (schema) {
-			var diagnostics = [];
-			var added = {};
-			let newSchema = schema;
-			if (schema) {
-				let documentIndex = 0;
-				for (let currentYAMLDoc in mossDocument.documents) {
-					let currentDoc = mossDocument.documents[currentYAMLDoc];
-					if (schema.schema && schema.schema.schemaSequence && schema.schema.schemaSequence[documentIndex]) {
-						newSchema = new ResolvedSchema(schema.schema.schemaSequence[documentIndex]);
+		return this.jsonSchemaService
+			.getSchemaForResource(textDocument.uri)
+			.then(function (schema) {
+				const diagnostics: Diagnostic[] = [];
+				const added = {};
+				let newSchema = schema;
+				if (schema) {
+					let documentIndex = 0;
+					for (const currentMossDoc in yamlDocument.documents) {
+						const currentDoc = yamlDocument.documents[currentMossDoc];
+						if (
+							schema.schema &&
+							schema.schema.schemaSequence &&
+							schema.schema.schemaSequence[documentIndex]
+						) {
+							newSchema = new ResolvedSchema(
+								schema.schema.schemaSequence[documentIndex]
+							);
+						}
+						const diagnostics = currentDoc.validate(
+							textDocument,
+							newSchema.schema
+						);
+						for (const diag in diagnostics) {
+							const curDiagnostic = diagnostics[diag];
+							currentDoc.errors.push({
+								location: {
+									offset: textDocument.offsetAt(curDiagnostic.range.start),
+									length:
+										textDocument.offsetAt(curDiagnostic.range.end) -
+										textDocument.offsetAt(curDiagnostic.range.start),
+								},
+								message: curDiagnostic.message,
+								severity: curDiagnostic.severity,
+							});
+						}
+						documentIndex++;
 					}
-					let diagnostics = currentDoc.getValidationProblems(newSchema.schema);
-					for (let diag in diagnostics) {
-						let curDiagnostic = diagnostics[diag];
-						currentDoc.errors.push({ location: { start: curDiagnostic.location.start, end: curDiagnostic.location.end }, message: curDiagnostic.message })
-					}
-					documentIndex++;
 				}
-
-			}
-			if (newSchema && newSchema.errors.length > 0) {
-				for (let curDiagnostic of newSchema.errors) {
-					diagnostics.push({
-						severity: DiagnosticSeverity.Error,
-						range: {
-							start: {
-								line: 0,
-								character: 0
-							},
-							end: {
-								line: 0,
-								character: 1
-							}
-						},
-						message: curDiagnostic
-					});
-				}
-			}
-			for (let currentYAMLDoc in mossDocument.documents) {
-				let currentDoc = mossDocument.documents[currentYAMLDoc];
-				currentDoc.errors.concat(currentDoc.warnings).forEach(function (error, idx) {
-					// remove duplicated messages
-					console.log('iter errors', error);
-					var signature = error.location.start + ' ' + error.location.end + ' ' + error.message;
-					if (!added[signature]) {
-						added[signature] = true;
-						var range = {
-							start: textDocument.positionAt(error.location.start),
-							end: textDocument.positionAt(error.location.end)
-						};
+				if (newSchema && newSchema.errors.length > 0) {
+					for (const curDiagnostic of newSchema.errors) {
 						diagnostics.push({
-							severity: idx >= currentDoc.errors.length ? DiagnosticSeverity.Warning : DiagnosticSeverity.Error,
-							range: range,
-							message: error.message
+							severity: DiagnosticSeverity.Error,
+							range: {
+								start: {
+									line: 0,
+									character: 0,
+								},
+								end: {
+									line: 0,
+									character: 1,
+								},
+							},
+							message: curDiagnostic,
 						});
 					}
-				});
-			}
-			return diagnostics;
-		});
+				}
+				for (const currentMossDoc in yamlDocument.documents) {
+					const currentDoc = yamlDocument.documents[currentMossDoc];
+					currentDoc.errors
+						.concat(currentDoc.warnings)
+						.forEach(function (error, idx) {
+							// remove duplicated messages
+							const signature =
+								error.location.offset +
+								' ' +
+								error.location.length +
+								' ' +
+								error.message;
+							if (!added[signature]) {
+								added[signature] = true;
+								diagnostics.push({
+									severity:
+										idx >= currentDoc.errors.length
+											? DiagnosticSeverity.Warning
+											: DiagnosticSeverity.Error,
+									range: {
+										start: textDocument.positionAt(error.location.offset),
+										end: textDocument.positionAt(
+											error.location.offset + error.location.length
+										),
+									},
+									message: error.message,
+								});
+							}
+						});
+				}
+				return diagnostics;
+			});
 	}
 }

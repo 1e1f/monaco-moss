@@ -22,7 +22,7 @@ import { SingleMossDocument, MossDocument } from '../mossLanguageTypes';
 import { IJSONSchemaService } from './jsonSchemaService';
 
 export class MossDocumentSymbols {
-  constructor(private schemaService: IJSONSchemaService) {}
+  constructor(private schemaService: IJSONSchemaService) { }
 
   public findDocumentSymbols(
     document: TextDocument,
@@ -86,7 +86,7 @@ export class MossDocumentSymbols {
 
   public findDocumentColors(
     document: TextDocument,
-    doc: YAMLDocument
+    doc: MossDocument
   ): Thenable<ColorInformation[]> {
     if (!doc || doc.documents.length === 0) {
       return Promise.resolve([]);
@@ -136,7 +136,7 @@ export class MossDocumentSymbols {
 
   public getColorPresentations(
     document: TextDocument,
-    doc: YAMLDocument,
+    doc: MossDocument,
     color: Color,
     range: Range
   ): ColorPresentation[] {

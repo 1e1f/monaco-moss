@@ -42,7 +42,7 @@ function bundleOne(moduleId, exclude) {
 			},
 			{
 				name: 'js-moss',
-				location: path.join(REPO_ROOT, 'node_modules/js-moss/dist'),
+				location: path.join(REPO_ROOT, 'node_modules/js-moss/lib'),
 				main: 'index'
 			},
 			// The following is required by YAML language service

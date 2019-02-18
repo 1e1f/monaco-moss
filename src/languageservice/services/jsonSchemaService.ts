@@ -14,7 +14,7 @@ import {
   SchemaRequestService,
   Thenable,
   WorkspaceContextService,
-} from '../yamlLanguageService';
+} from '../mossLanguageService';
 
 import * as nls from 'vscode-nls';
 const localize = nls.loadMessageBundle();
@@ -374,13 +374,13 @@ export class JSONSchemaService implements IJSONSchemaService {
         schemaContent = Json.parse(content, jsonErrors);
         const errors = jsonErrors.length
           ? [
-              localize(
-                'json.schema.invalidFormat',
-                "Unable to parse content from '{0}': Parse error at offset {1}.",
-                toDisplayString(url),
-                jsonErrors[0].offset
-              ),
-            ]
+            localize(
+              'json.schema.invalidFormat',
+              "Unable to parse content from '{0}': Parse error at offset {1}.",
+              toDisplayString(url),
+              jsonErrors[0].offset
+            ),
+          ]
           : [];
         return new UnresolvedSchema(schemaContent, errors);
       },

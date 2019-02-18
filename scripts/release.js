@@ -23,6 +23,6 @@ helpers.packageESM({
     "vscode-languageserver-types/lib/esm": "vscode-languageserver-types",
     "vscode-uri/lib/esm": "vscode-uri",
     "vscode-json-languageservice/lib/esm": "vscode-json-languageservice",
-    "js-moss/dist": "js-moss"
+    "js-moss/lib": "js-moss"
   }
 });
