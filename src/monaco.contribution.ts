@@ -80,6 +80,7 @@ monaco.languages.register({
   aliases: ['MOSS', 'moss', 'MSS', 'mss'],
   mimetypes: ['application/x-moss'],
 });
+
 monaco.languages.onLanguage('moss', () => {
   withMode(mode => mode.setupMode(mossDefaults));
 });
