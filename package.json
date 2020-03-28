@@ -23,18 +23,18 @@
     "@types/chai": "^4.1",
     "@types/mocha": "^5.2",
     "@types/node": "^10",
-    "js-yaml": "^3.12",
-    "js-moss": "^0.16",
-    "jsonc-parser": "^2.0",
-    "monaco-editor-core": "^0.15.5",
-    "monaco-languages": "^1.6",
+    "js-yaml": "^3.13",
+    "js-moss": "^0.17",
+    "jsonc-parser": "^2.2",
+    "monaco-editor-core": "^0.20",
+    "monaco-languages": "^1.10",
     "monaco-plugin-helpers": "^1.0.2",
     "requirejs": "^2.3",
     "rimraf": "^2.6",
-    "typescript": "^3.1",
+    "typescript": "^3.8",
     "uglify-es": "^3.3",
     "vscode-nls": "^4",
-    "vscode-json-languageservice": "^3.2",
-    "vscode-languageserver-types": "3.14"
+    "vscode-json-languageservice": "^3.4",
+    "vscode-languageserver-types": "3.15"
   }
 }
