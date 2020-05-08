@@ -37,6 +37,15 @@ export function convertSimple2RegExp(pattern: string): RegExp {
   return match
     ? convertRegexString2RegExp(match[1], match[2])
     : convertGlobalPattern2RegExp(pattern);
+<<<<<<< HEAD
+=======
+}
+
+export function convertSimple2RegExpPattern(pattern: string): string {
+  return pattern
+    .replace(/[\-\\\{\}\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&')
+    .replace(/[\*]/g, '.*');
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 }
 
 function convertGlobalPattern2RegExp(pattern: string): RegExp {
@@ -50,9 +59,12 @@ function convertGlobalPattern2RegExp(pattern: string): RegExp {
 function convertRegexString2RegExp(pattern: string, flag: string): RegExp {
   return new RegExp(pattern, flag);
 }
+<<<<<<< HEAD
 
 export function convertSimple2RegExpPattern(pattern: string): string {
   return pattern
     .replace(/[\-\\\{\}\+\?\|\^\$\.\,\[\]\(\)\#\s]/g, '\\$&')
     .replace(/[\*]/g, '.*');
 }
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4

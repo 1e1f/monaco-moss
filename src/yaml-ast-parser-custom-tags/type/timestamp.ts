@@ -1,8 +1,11 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/timestamp.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/timestamp.ts
 import { Type } from '../type';
 
-var YAML_TIMESTAMP_REGEXP = new RegExp(
+const YAML_TIMESTAMP_REGEXP = new RegExp(
   '^([0-9][0-9][0-9][0-9])' + // [1] year
   '-([0-9][0-9]?)' + // [2] month
   '-([0-9][0-9]?)' + // [3] day
@@ -20,7 +23,11 @@ function resolveYamlTimestamp(data) {
     return false;
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/timestamp.ts
   var match,
+=======
+  let match,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/timestamp.ts
     year,
     month,
     day,
@@ -43,7 +50,11 @@ function resolveYamlTimestamp(data) {
 }
 
 function constructYamlTimestamp(data) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/timestamp.ts
   var match,
+=======
+  let match,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/timestamp.ts
     year,
     month,
     day,
@@ -81,7 +92,11 @@ function constructYamlTimestamp(data) {
 
   if (match[7]) {
     fraction = match[7].slice(0, 3);
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/timestamp.ts
     while ((<any>fraction).length < 3) {
+=======
+    while ((fraction as any).length < 3) {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/timestamp.ts
       // milli-seconds
       fraction = fraction + '0';
     }
@@ -100,7 +115,11 @@ function constructYamlTimestamp(data) {
   }
 
   date = new Date(
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/timestamp.ts
     Date.UTC(year, month, day, hour, minute, second, <number>fraction)
+=======
+    Date.UTC(year, month, day, hour, minute, second, fraction as number)
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/timestamp.ts
   );
 
   if (delta) {

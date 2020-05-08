@@ -1,6 +1,10 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/js/function.ts
 'use strict';
 declare function require(N: string): any;
 var esprima = require('esprima');
+=======
+declare var esprima: any;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/js/function.ts
 
 // Browserified version does not have esprima
 //
@@ -18,7 +22,7 @@ function resolveJavascriptFunction(data) {
   }
 
   try {
-    var source = '(' + data + ')',
+    let source = '(' + data + ')',
       ast = esprima.parse(source, { range: true }),
       params = [],
       body;
@@ -27,7 +31,11 @@ function resolveJavascriptFunction(data) {
       'Program' !== ast.type ||
       1 !== ast.body.length ||
       'ExpressionStatement' !== ast.body[0].type ||
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/js/function.ts
       'FunctionExpression' !== ast.body[0]['expression'].type
+=======
+      'FunctionExpression' !== ast.body[0].expression.type
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/js/function.ts
     ) {
       return false;
     }
@@ -41,7 +49,7 @@ function resolveJavascriptFunction(data) {
 function constructJavascriptFunction(data) {
   /*jslint evil:true*/
 
-  var source = '(' + data + ')',
+  let source = '(' + data + ')',
     ast = esprima.parse(source, { range: true }),
     params: string[] = [],
     body;
@@ -50,21 +58,29 @@ function constructJavascriptFunction(data) {
     'Program' !== ast.type ||
     1 !== ast.body.length ||
     'ExpressionStatement' !== ast.body[0].type ||
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/js/function.ts
     'FunctionExpression' !== ast.body[0]['expression'].type
+=======
+    'FunctionExpression' !== ast.body[0].expression.type
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/js/function.ts
   ) {
     throw new Error('Failed to resolve function');
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/js/function.ts
   ast.body[0]['expression'].params.forEach(function(param) {
+=======
+  ast.body[0].expression.params.forEach(function(param) {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/js/function.ts
     params.push(param.name);
   });
 
-  body = ast.body[0]['expression'].body.range;
+  body = ast.body[0].expression.body.range;
 
   // Esprima's ranges include the first '{' and the last '}' characters on
   // function expressions. So cut them out.
   /*eslint-disable no-new-func*/
-  return new (<any>Function)(params, source.slice(body[0] + 1, body[1] - 1));
+  return new (Function as any)(params, source.slice(body[0] + 1, body[1] - 1));
 }
 
 function representJavascriptFunction(object /*, style*/) {

@@ -1,16 +1,23 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/omap.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/omap.ts
 import { Type } from '../type';
 
-var _hasOwnProperty = Object.prototype.hasOwnProperty;
-var _toString = Object.prototype.toString;
+const _hasOwnProperty = Object.prototype.hasOwnProperty;
+const _toString = Object.prototype.toString;
 
 function resolveYamlOmap(data) {
   if (null === data) {
     return true;
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/omap.ts
   var objectKeys = [],
+=======
+  let objectKeys = [],
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/omap.ts
     index,
     length,
     pair,

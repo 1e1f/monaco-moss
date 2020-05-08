@@ -1,9 +1,12 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/pairs.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/pairs.ts
 import { Type } from '../type';
 import * as ast from '../yamlAST';
 
-var _toString = Object.prototype.toString;
+const _toString = Object.prototype.toString;
 
 function resolveYamlPairs(data) {
   if (null === data) {
@@ -13,7 +16,11 @@ function resolveYamlPairs(data) {
     return false;
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/pairs.ts
   var index,
+=======
+  let index,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/pairs.ts
     length,
     pair,
     keys,
@@ -56,11 +63,11 @@ function constructYamlPairs(data) {
   result.endPosition = data.endPosition;
 
   for (index = 0, length = object.length; index < length; index += 1) {
-    let pair = object[index];
+    const pair = object[index];
 
-    let mapping = pair.mappings[0];
+    const mapping = pair.mappings[0];
 
-    let pairSeq = ast.newItems();
+    const pairSeq = ast.newItems();
     pairSeq.parent = result;
     pairSeq.startPosition = mapping.key.startPosition;
     pairSeq.endPosition = mapping.value.startPosition;

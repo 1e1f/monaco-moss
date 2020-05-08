@@ -7,6 +7,7 @@ var YAMLException = require('./exception');
 var DEFAULT_FULL_SCHEMA = require('./schema/default_full');
 var DEFAULT_SAFE_SCHEMA = require('./schema/default_safe');
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
 var _toString = Object.prototype.toString;
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -35,6 +36,36 @@ var CHAR_VERTICAL_LINE = 0x7c; /* | */
 var CHAR_RIGHT_CURLY_BRACKET = 0x7d; /* } */
 
 var ESCAPE_SEQUENCES = {};
+=======
+const _toString = Object.prototype.toString;
+const _hasOwnProperty = Object.prototype.hasOwnProperty;
+
+const CHAR_TAB = 0x09; /* Tab */
+const CHAR_LINE_FEED = 0x0a; /* LF */
+const CHAR_CARRIAGE_RETURN = 0x0d; /* CR */
+const CHAR_SPACE = 0x20; /* Space */
+const CHAR_EXCLAMATION = 0x21; /* ! */
+const CHAR_DOUBLE_QUOTE = 0x22; /* " */
+const CHAR_SHARP = 0x23; /* # */
+const CHAR_PERCENT = 0x25; /* % */
+const CHAR_AMPERSAND = 0x26; /* & */
+const CHAR_SINGLE_QUOTE = 0x27; /* ' */
+const CHAR_ASTERISK = 0x2a; /* * */
+const CHAR_COMMA = 0x2c; /* , */
+const CHAR_MINUS = 0x2d; /* - */
+const CHAR_COLON = 0x3a; /* : */
+const CHAR_GREATER_THAN = 0x3e; /* > */
+const CHAR_QUESTION = 0x3f; /* ? */
+const CHAR_COMMERCIAL_AT = 0x40; /* @ */
+const CHAR_LEFT_SQUARE_BRACKET = 0x5b; /* [ */
+const CHAR_RIGHT_SQUARE_BRACKET = 0x5d; /* ] */
+const CHAR_GRAVE_ACCENT = 0x60; /* ` */
+const CHAR_LEFT_CURLY_BRACKET = 0x7b; /* { */
+const CHAR_VERTICAL_LINE = 0x7c; /* | */
+const CHAR_RIGHT_CURLY_BRACKET = 0x7d; /* } */
+
+const ESCAPE_SEQUENCES = {};
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
 
 ESCAPE_SEQUENCES[0x00] = '\\0';
 ESCAPE_SEQUENCES[0x07] = '\\a';
@@ -52,7 +83,11 @@ ESCAPE_SEQUENCES[0xa0] = '\\_';
 ESCAPE_SEQUENCES[0x2028] = '\\L';
 ESCAPE_SEQUENCES[0x2029] = '\\P';
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
 var DEPRECATED_BOOLEANS_SYNTAX = [
+=======
+const DEPRECATED_BOOLEANS_SYNTAX = [
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
   'y',
   'Y',
   'yes',
@@ -72,7 +107,7 @@ var DEPRECATED_BOOLEANS_SYNTAX = [
 ];
 
 function compileStyleMap(schema, map) {
-  var result, keys, index, length, tag, style, type;
+  let result, keys, index, length, tag, style, type;
 
   if (null === map) {
     return {};
@@ -102,7 +137,7 @@ function compileStyleMap(schema, map) {
 }
 
 function encodeHex(character) {
-  var string, handle, length;
+  let string, handle, length;
 
   string = character.toString(16).toUpperCase();
 
@@ -125,6 +160,7 @@ function encodeHex(character) {
 }
 
 function State(options) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
   this.schema = options['schema'] || DEFAULT_FULL_SCHEMA;
   this.indent = Math.max(1, options['indent'] || 2);
   this.skipInvalid = options['skipInvalid'] || false;
@@ -132,6 +168,13 @@ function State(options) {
     ? -1
     : options['flowLevel'];
   this.styleMap = compileStyleMap(this.schema, options['styles'] || null);
+=======
+  this.schema = options.schema || DEFAULT_FULL_SCHEMA;
+  this.indent = Math.max(1, options.indent || 2);
+  this.skipInvalid = options.skipInvalid || false;
+  this.flowLevel = common.isNothing(options.flowLevel) ? -1 : options.flowLevel;
+  this.styleMap = compileStyleMap(this.schema, options.styles || null);
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
 
   this.implicitTypes = this.schema.compiledImplicit;
   this.explicitTypes = this.schema.compiledExplicit;
@@ -144,7 +187,7 @@ function State(options) {
 }
 
 function indentString(string: string, spaces) {
-  var ind = common.repeat(' ', spaces),
+  let ind = common.repeat(' ', spaces),
     position = 0,
     next = -1,
     result = '',
@@ -174,7 +217,7 @@ function generateNextLine(state, level) {
 }
 
 function testImplicitResolving(state, str) {
-  var index, length, type;
+  let index, length, type;
 
   for (
     index = 0, length = state.implicitTypes.length;
@@ -198,7 +241,11 @@ function StringBuilder(source) {
 }
 
 StringBuilder.prototype.takeUpTo = function(position) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
   var er;
+=======
+  let er;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
 
   if (position < this.checkpoint) {
     er = new Error('position should be > checkpoint');
@@ -213,7 +260,11 @@ StringBuilder.prototype.takeUpTo = function(position) {
 };
 
 StringBuilder.prototype.escapeChar = function() {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
   var character, esc;
+=======
+  let character, esc;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
 
   character = this.source.charCodeAt(this.checkpoint);
   esc = ESCAPE_SEQUENCES[character] || encodeHex(character);
@@ -230,7 +281,11 @@ StringBuilder.prototype.finish = function() {
 };
 
 function writeScalar(state, object, level) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
   var simple,
+=======
+  let simple,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
     first,
     spaceWrap,
     folded,
@@ -257,11 +312,19 @@ function writeScalar(state, object, level) {
     return;
   }
   if (object.indexOf('!include') == 0) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/dumper.ts
     state.dump = '' + object; //FIXME
     return;
   }
   if (object.indexOf('!$$$novalue') == 0) {
     state.dump = ''; //FIXME
+=======
+    state.dump = '' + object; // FIXME
+    return;
+  }
+  if (object.indexOf('!$$$novalue') == 0) {
+    state.dump = ''; // FIXME
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/dumper.ts
     return;
   }
   if (-1 !== DEPRECATED_BOOLEANS_SYNTAX.indexOf(object)) {
@@ -434,7 +497,7 @@ function writeScalar(state, object, level) {
 // breaks within the string), so it's important to only end with the exact
 // same number as we started.
 function fold(object, max) {
-  var result = '',
+  let result = '',
     position = 0,
     length = object.length,
     trailing = /\n+$/.exec(object),
@@ -472,7 +535,7 @@ function foldLine(line, max) {
     return line;
   }
 
-  var foldRe = /[^\s] [^\s]/g,
+  let foldRe = /[^\s] [^\s]/g,
     result = '',
     prevMatch = 0,
     foldStart = 0,
@@ -559,7 +622,7 @@ function needsHexEscape(character) {
 }
 
 function writeFlowSequence(state, level, object) {
-  var _result = '',
+  let _result = '',
     _tag = state.tag,
     index,
     length;
@@ -579,7 +642,7 @@ function writeFlowSequence(state, level, object) {
 }
 
 function writeBlockSequence(state, level, object, compact) {
-  var _result = '',
+  let _result = '',
     _tag = state.tag,
     index,
     length;
@@ -599,7 +662,7 @@ function writeBlockSequence(state, level, object, compact) {
 }
 
 function writeFlowMapping(state, level, object) {
-  var _result = '',
+  let _result = '',
     _tag = state.tag,
     objectKeyList = Object.keys(object),
     index,
@@ -643,7 +706,7 @@ function writeFlowMapping(state, level, object) {
 }
 
 function writeBlockMapping(state, level, object, compact) {
-  var _result = '',
+  let _result = '',
     _tag = state.tag,
     objectKeyList = Object.keys(object),
     index,
@@ -706,7 +769,7 @@ function writeBlockMapping(state, level, object, compact) {
 }
 
 function detectType(state, object, explicit) {
-  var _result, typeList, index, length, type, style;
+  let _result, typeList, index, length, type, style;
 
   typeList = explicit ? state.explicitTypes : state.implicitTypes;
 
@@ -755,7 +818,7 @@ function writeNode(state, level, object, block, compact) {
     detectType(state, object, true);
   }
 
-  var type = _toString.call(state.dump);
+  const type = _toString.call(state.dump);
 
   if (block) {
     block = 0 > state.flowLevel || state.flowLevel > level;
@@ -768,7 +831,7 @@ function writeNode(state, level, object, block, compact) {
     compact = false;
   }
 
-  var objectOrArray = '[object Object]' === type || '[object Array]' === type,
+  let objectOrArray = '[object Object]' === type || '[object Array]' === type,
     duplicateIndex,
     duplicate;
 
@@ -829,7 +892,7 @@ function writeNode(state, level, object, block, compact) {
 }
 
 function getDuplicateReferences(object, state) {
-  var objects = [],
+  let objects = [],
     duplicatesIndexes = [],
     index,
     length;
@@ -847,7 +910,7 @@ function getDuplicateReferences(object, state) {
 }
 
 function inspectNode(object, objects, duplicatesIndexes) {
-  var type = _toString.call(object),
+  let type = _toString.call(object),
     objectKeyList,
     index,
     length;
@@ -883,7 +946,7 @@ function inspectNode(object, objects, duplicatesIndexes) {
 export function dump(input, options) {
   options = options || {};
 
-  var state = new State(options);
+  const state = new State(options);
 
   getDuplicateReferences(input, state);
 

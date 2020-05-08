@@ -1,5 +1,8 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/null.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/null.ts
 import { Type } from '../type';
 
 function resolveYamlNull(data) {
@@ -7,7 +10,7 @@ function resolveYamlNull(data) {
     return true;
   }
 
-  var max = data.length;
+  const max = data.length;
 
   return (
     (max === 1 && data === '~') ||
@@ -29,6 +32,7 @@ export default new Type('tag:yaml.org,2002:null', {
   construct: constructYamlNull,
   predicate: isNull,
   represent: {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/null.ts
     canonical: function() {
       return '~';
     },
@@ -39,6 +43,18 @@ export default new Type('tag:yaml.org,2002:null', {
       return 'NULL';
     },
     camelcase: function() {
+=======
+    canonical() {
+      return '~';
+    },
+    lowercase() {
+      return 'null';
+    },
+    uppercase() {
+      return 'NULL';
+    },
+    camelcase() {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/null.ts
       return 'Null';
     },
   },

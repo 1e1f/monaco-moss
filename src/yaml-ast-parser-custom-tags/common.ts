@@ -1,5 +1,8 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/common.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/common.ts
 export function isNothing(subject) {
   return typeof subject === 'undefined' || null === subject;
 }
@@ -18,7 +21,7 @@ export function toArray(sequence) {
 }
 
 export function extend(target, source) {
-  var index, length, key, sourceKeys;
+  let index, length, key, sourceKeys;
 
   if (source) {
     sourceKeys = Object.keys(source);
@@ -33,7 +36,11 @@ export function extend(target, source) {
 }
 
 export function repeat(string, count) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/common.ts
   var result = '',
+=======
+  let result = '',
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/common.ts
     cycle;
 
   for (cycle = 0; cycle < count; cycle += 1) {

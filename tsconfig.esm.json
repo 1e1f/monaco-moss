@@ -2,10 +2,11 @@
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "node",
-    "outDir": "../out/esm",
+    "outDir": "./out/esm",
     "target": "es5",
     "lib": [
       "dom",
+<<<<<<< HEAD:src/tsconfig.esm.json
       "es5",
       "es2015.collection",
       "es2015.promise",
@@ -14,4 +15,16 @@
     ],
     "downlevelIteration": true
   }
+=======
+      "esnext"
+    ]
+  },
+  "include": [
+    "src"
+],
+"exclude": [
+    "out",
+    ".vscode"
+]
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:tsconfig.esm.json
 }

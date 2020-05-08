@@ -1,5 +1,8 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/int.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/int.ts
 import * as common from '../common';
 import { Type } from '../type';
 
@@ -24,7 +27,7 @@ function resolveYamlInteger(data) {
     return false;
   }
 
-  var max = data.length,
+  let max = data.length,
     index = 0,
     hasDigits = false,
     ch;
@@ -127,7 +130,11 @@ function resolveYamlInteger(data) {
 }
 
 function constructYamlInteger(data) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/int.ts
   var value = data,
+=======
+  let value = data,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/int.ts
     sign = 1,
     ch,
     base,
@@ -183,8 +190,12 @@ function constructYamlInteger(data) {
 function isInteger(object) {
   return (
     '[object Number]' === Object.prototype.toString.call(object) &&
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/int.ts
     0 === object % 1 &&
     !common.isNegativeZero(object)
+=======
+    (0 === object % 1 && !common.isNegativeZero(object))
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/int.ts
   );
 }
 
@@ -194,6 +205,7 @@ export default new Type('tag:yaml.org,2002:int', {
   construct: constructYamlInteger,
   predicate: isInteger,
   represent: {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/int.ts
     binary: function(object) {
       return '0b' + object.toString(2);
     },
@@ -204,6 +216,18 @@ export default new Type('tag:yaml.org,2002:int', {
       return object.toString(10);
     },
     hexadecimal: function(object) {
+=======
+    binary(object) {
+      return '0b' + object.toString(2);
+    },
+    octal(object) {
+      return '0' + object.toString(8);
+    },
+    decimal(object) {
+      return object.toString(10);
+    },
+    hexadecimal(object) {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/int.ts
       return '0x' + object.toString(16).toUpperCase();
     },
   },

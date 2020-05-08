@@ -1,7 +1,10 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/bool.ts
 declare function require(n: string): any;
 
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/bool.ts
 import { Type } from '../type';
 
 function resolveYamlBoolean(data) {
@@ -9,7 +12,7 @@ function resolveYamlBoolean(data) {
     return false;
   }
 
-  var max = data.length;
+  const max = data.length;
 
   return (
     (max === 4 && (data === 'true' || data === 'True' || data === 'TRUE')) ||
@@ -31,6 +34,7 @@ export default new Type('tag:yaml.org,2002:bool', {
   construct: constructYamlBoolean,
   predicate: isBoolean,
   represent: {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/bool.ts
     lowercase: function(object) {
       return object ? 'true' : 'false';
     },
@@ -38,6 +42,15 @@ export default new Type('tag:yaml.org,2002:bool', {
       return object ? 'TRUE' : 'FALSE';
     },
     camelcase: function(object) {
+=======
+    lowercase(object) {
+      return object ? 'true' : 'false';
+    },
+    uppercase(object) {
+      return object ? 'TRUE' : 'FALSE';
+    },
+    camelcase(object) {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/bool.ts
       return object ? 'True' : 'False';
     },
   },

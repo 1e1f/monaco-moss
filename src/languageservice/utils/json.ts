@@ -2,8 +2,13 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+<<<<<<< HEAD
 
 // tslint:disable-next-line: no-any
+=======
+'use strict';
+
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 export function stringifyObject(
   obj: any,
   indent: string,
@@ -50,4 +55,8 @@ export function stringifyObject(
     }
   }
   return stringifyLiteral(obj);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4

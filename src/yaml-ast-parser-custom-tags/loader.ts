@@ -1,15 +1,24 @@
 import * as ast from './yamlAST';
 'use strict';
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
 /*eslint-disable max-len,no-use-before-define*/
+=======
+import * as ast from './yamlAST';
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
 import * as common from './common';
 import YAMLException from './exception';
 import Mark from './mark';
 import { Schema } from './schema';
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
 import DEFAULT_SAFE_SCHEMA from './schema/default_safe';
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 import DEFAULT_FULL_SCHEMA from './schema/default_full';
+import DEFAULT_SAFE_SCHEMA from './schema/default_safe';
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
 var CONTEXT_FLOW_IN = 1;
@@ -27,6 +36,25 @@ var PATTERN_FLOW_INDICATORS = /[,\[\]\{\}]/;
 var PATTERN_TAG_HANDLE = /^(?:!|!!|![a-z\-]+!)$/i;
 var PATTERN_TAG_URI = /^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;
 
+=======
+const _hasOwnProperty = Object.prototype.hasOwnProperty;
+
+const CONTEXT_FLOW_IN = 1;
+const CONTEXT_FLOW_OUT = 2;
+const CONTEXT_BLOCK_IN = 3;
+const CONTEXT_BLOCK_OUT = 4;
+
+const CHOMPING_CLIP = 1;
+const CHOMPING_STRIP = 2;
+const CHOMPING_KEEP = 3;
+
+const PATTERN_NON_PRINTABLE = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uD800-\uDFFF\uFFFE\uFFFF]/;
+const PATTERN_NON_ASCII_LINE_BREAKS = /[\x85\u2028\u2029]/;
+const PATTERN_FLOW_INDICATORS = /[,\[\]\{\}]/;
+const PATTERN_TAG_HANDLE = /^(?:!|!!|![a-z\-]+!)$/i;
+const PATTERN_TAG_URI = /^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;
+
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 function is_EOL(c) {
   return c === 0x0a /* LF */ || c === 0x0d /* CR */;
 }
@@ -55,7 +83,7 @@ function is_FLOW_INDICATOR(c) {
 }
 
 function fromHexCode(c) {
-  var lc;
+  let lc;
 
   if (0x30 /* 0 */ <= c && c <= 0x39 /* 9 */) {
     return c - 0x30;
@@ -144,11 +172,11 @@ function charFromCodepoint(c) {
   );
 }
 
-var simpleEscapeCheck = new Array(256); // integer, for fast access
-var simpleEscapeMap = new Array(256);
-var customEscapeCheck = new Array(256); // integer, for fast access
-var customEscapeMap = new Array(256);
-for (var i = 0; i < 256; i++) {
+const simpleEscapeCheck = new Array(256); // integer, for fast access
+const simpleEscapeMap = new Array(256);
+const customEscapeCheck = new Array(256); // integer, for fast access
+const customEscapeMap = new Array(256);
+for (let i = 0; i < 256; i++) {
   customEscapeMap[i] = simpleEscapeMap[i] = simpleEscapeSequence(i);
   simpleEscapeCheck[i] = simpleEscapeMap[i] ? 1 : 0;
   customEscapeCheck[i] = 1;
@@ -159,6 +187,7 @@ for (var i = 0; i < 256; i++) {
 }
 
 class State {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   input: string;
   filename: string;
   schema: Schema;
@@ -186,16 +215,45 @@ class State {
   ignoreDuplicateKeys: boolean;
 
   lines: Line[] = [];
+=======
+  public input: string;
+  public filename: string;
+  public schema: Schema;
+  public errorMap: any = {};
+  public errors: YAMLException[] = [];
+  public onWarning: () => any;
+  public legacy: boolean;
+  public implicitTypes: any;
+  public typeMap: any;
+  public length: number;
+  public position: number;
+  public line: number;
+  public lineStart: number;
+  public lineIndent: number;
+  public documents: ast.YAMLNode[];
+  public kind: string;
+  public result: ast.YAMLNode;
+  public tag: string;
+  public anchor: string;
+  public anchorMap: { [name: string]: ast.YAMLNode };
+  public tagMap: any;
+  public version: string;
+  public checkLineBreaks: boolean;
+  public allowAnyEscape: boolean;
+  public ignoreDuplicateKeys: boolean;
+
+  public lines: Line[] = [];
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
   constructor(input: string, options: any) {
     this.input = input;
 
-    this.filename = options['filename'] || null;
-    this.schema = options['schema'] || DEFAULT_FULL_SCHEMA;
-    this.onWarning = options['onWarning'] || null;
-    this.legacy = options['legacy'] || false;
-    this.allowAnyEscape = options['allowAnyEscape'] || false;
-    this.ignoreDuplicateKeys = options['ignoreDuplicateKeys'] || false;
+    this.filename = options.filename || null;
+    this.schema = options.schema || DEFAULT_FULL_SCHEMA;
+    this.onWarning = options.onWarning || null;
+    this.legacy = options.legacy || false;
+    this.allowAnyEscape = options.allowAnyEscape || false;
+    this.ignoreDuplicateKeys = options.ignoreDuplicateKeys || false;
 
     this.implicitTypes = this.schema.compiledImplicit;
     this.typeMap = this.schema.compiledTypeMap;
@@ -231,19 +289,27 @@ function throwErrorFromPosition(
   isWarning = false,
   toLineEnd = false
 ) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var line = positionToLine(state, position);
+=======
+  const line = positionToLine(state, position);
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
   if (!line) {
     return;
   }
 
-  var hash = message + position;
+  const hash = message + position;
 
   if (state.errorMap[hash]) {
     return;
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var mark = new Mark(
+=======
+  const mark = new Mark(
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     state.filename,
     state.input,
     position,
@@ -254,11 +320,12 @@ function throwErrorFromPosition(
     mark.toLineEnd = true;
   }
 
-  var error = new YAMLException(message, mark, isWarning);
+  const error = new YAMLException(message, mark, isWarning);
   state.errors.push(error);
 }
 
 function throwError(state: State, message) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   //FIXME
   var error = generateError(state, message);
   var hash = error.message + error.mark.position;
@@ -268,11 +335,21 @@ function throwError(state: State, message) {
   state.errors.push(error);
   state.errorMap[hash] = 1;
   var or = state.position;
+=======
+  // FIXME
+  const error = generateError(state, message);
+  const hash = error.message + error.mark.position;
+  if (!state.errorMap[hash]) {
+    state.errors.push(error);
+    state.errorMap[hash] = 1;
+  }
+  const or = state.position;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
   while (true) {
     if (state.position >= state.input.length - 1) {
       return;
     }
-    var c = state.input.charAt(state.position);
+    const c = state.input.charAt(state.position);
     if (c == '\n') {
       state.position--;
       if (state.position == or) {
@@ -289,22 +366,28 @@ function throwError(state: State, message) {
     }
     state.position++;
   }
-  //throw generateError(state, message);
+  // throw generateError(state, message);
 }
 
 function throwWarning(state, message) {
-  var error = generateError(state, message);
+  const error = generateError(state, message);
 
   if (state.onWarning) {
     state.onWarning.call(null, error);
   } else {
-    //throw error;
+    // throw error;
   }
 }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
 var directiveHandlers = {
   YAML: function handleYamlDirective(state, name, args) {
     var match, major, minor;
+=======
+const directiveHandlers = {
+  YAML: function handleYamlDirective(state, name, args) {
+    let match, major, minor;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
     if (null !== state.version) {
       throwError(state, 'duplication of %YAML directive');
@@ -342,7 +425,11 @@ var directiveHandlers = {
   },
 
   TAG: function handleTagDirective(state, name, args) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
     var handle, prefix;
+=======
+    let handle, prefix;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
     if (2 !== args.length) {
       throwError(state, 'TAG directive accepts exactly two arguments');
@@ -382,8 +469,13 @@ function captureSegment(
   end: number,
   checkJson: boolean
 ): void {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var _position, _length, _character, _result;
   var scalar: ast.YAMLScalar = <ast.YAMLScalar>state.result;
+=======
+  let _position, _length, _character, _result;
+  const scalar: ast.YAMLScalar = state.result as ast.YAMLScalar;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
   if (scalar.startPosition == -1) {
     scalar.startPosition = start;
   }
@@ -416,7 +508,7 @@ function captureSegment(
 }
 
 function mergeMappings(state: State, destination, source) {
-  var sourceKeys, key, index, quantity;
+  let sourceKeys, key, index, quantity;
 
   if (!common.isObject(source)) {
     throwError(
@@ -443,11 +535,15 @@ function storeMappingPair(
   keyNode: ast.YAMLNode,
   valueNode: ast.YAMLNode
 ): ast.YamlMap {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var index, quantity;
+=======
+  let index, quantity;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
   if (keyNode == null) {
     return;
   }
-  //keyNode = String(keyNode);
+  // keyNode = String(keyNode);
 
   if (null === _result) {
     _result = {
@@ -470,7 +566,7 @@ function storeMappingPair(
   //   }
   // } else {
 
-  var mapping = ast.newMapping(<ast.YAMLScalar>keyNode, valueNode);
+  const mapping = ast.newMapping(keyNode as ast.YAMLScalar, valueNode);
   mapping.parent = _result;
   keyNode.parent = mapping;
   if (valueNode != null) {
@@ -495,18 +591,23 @@ function storeMappingPair(
         );
       }
     });
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
 
   _result.mappings.push(mapping);
   _result.endPosition = valueNode
     ? valueNode.endPosition
     : keyNode.endPosition + 1; //FIXME.workaround should be position of ':' indeed
   // }
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
+  _result.mappings.push(mapping);
+  _result.endPosition = mapping.endPosition;
   return _result;
 }
 
 function readLineBreak(state: State) {
-  var ch;
+  let ch;
 
   ch = state.input.charCodeAt(state.position);
 
@@ -531,14 +632,14 @@ function readLineBreak(state: State) {
 }
 
 class Line {
-  start: number;
-  line: number;
+  public start: number;
+  public line: number;
 }
 
 function positionToLine(state: State, position: number): Line {
-  var line: Line;
+  let line: Line;
 
-  for (var i = 0; i < state.lines.length; i++) {
+  for (let i = 0; i < state.lines.length; i++) {
     if (state.lines[i].start > position) {
       break;
     }
@@ -557,7 +658,7 @@ function positionToLine(state: State, position: number): Line {
 }
 
 function skipSeparationSpace(state: State, allowComments, checkIndent) {
-  var lineBreaks = 0,
+  let lineBreaks = 0,
     ch = state.input.charCodeAt(state.position);
 
   while (0 !== ch) {
@@ -608,7 +709,7 @@ function skipSeparationSpace(state: State, allowComments, checkIndent) {
 }
 
 function testDocumentSeparator(state: State) {
-  var _position = state.position,
+  let _position = state.position,
     ch;
 
   ch = state.input.charCodeAt(_position);
@@ -641,7 +742,7 @@ function writeFoldedLines(state: State, scalar: ast.YAMLScalar, count: number) {
 }
 
 function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
-  var preceding,
+  let preceding,
     following,
     captureStart,
     captureEnd,
@@ -651,8 +752,9 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
     _lineIndent,
     _kind = state.kind,
     _result = state.result,
-    ch;
-  var state_result = ast.newScalar();
+    ch,
+    _colonPosition = -1;
+  const state_result = ast.newScalar();
   state_result.plainScalar = true;
   state.result = state_result;
   ch = state.input.charCodeAt(state.position);
@@ -687,7 +789,7 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
   }
 
   state.kind = 'scalar';
-  //state.result = '';
+  // state.result = '';
   captureStart = captureEnd = state.position;
   hasPendingContent = false;
 
@@ -699,6 +801,10 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
         is_WS_OR_EOL(following) ||
         (withinFlowCollection && is_FLOW_INDICATOR(following))
       ) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
+=======
+        _colonPosition = state.position;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
         break;
       }
     } else if (0x23 /* # */ === ch) {
@@ -755,6 +861,10 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
       state_result.startPosition,
       state_result.endPosition
     );
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
+=======
+    state_result.colonPosition = _colonPosition;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     return true;
   }
 
@@ -764,14 +874,18 @@ function readPlainScalar(state: State, nodeIndent, withinFlowCollection) {
 }
 
 function readSingleQuotedScalar(state: State, nodeIndent) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var ch, captureStart, captureEnd;
+=======
+  let ch, captureStart, captureEnd;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
   ch = state.input.charCodeAt(state.position);
 
   if (0x27 /* ' */ !== ch) {
     return false;
   }
-  var scalar = ast.newScalar();
+  const scalar = ast.newScalar();
   scalar.singleQuoted = true;
   state.kind = 'scalar';
   state.result = scalar;
@@ -781,12 +895,16 @@ function readSingleQuotedScalar(state: State, nodeIndent) {
   captureStart = captureEnd = state.position;
 
   while (0 !== (ch = state.input.charCodeAt(state.position))) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
     //console.log('ch: <' + String.fromCharCode(ch) + '>');
+=======
+    // console.log('ch: <' + String.fromCharCode(ch) + '>');
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     if (0x27 /* ' */ === ch) {
       captureSegment(state, captureStart, state.position, true);
       ch = state.input.charCodeAt(++state.position);
 
-      //console.log('next: <' + String.fromCharCode(ch) + '>');
+      // console.log('next: <' + String.fromCharCode(ch) + '>');
       scalar.endPosition = state.position;
       if (0x27 /* ' */ === ch) {
         captureStart = captureEnd = state.position;
@@ -824,7 +942,11 @@ function readSingleQuotedScalar(state: State, nodeIndent) {
 }
 
 function readDoubleQuotedScalar(state: State, nodeIndent: number) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var captureStart, captureEnd, hexLength, hexResult, tmp, tmpEsc, ch;
+=======
+  let captureStart, captureEnd, hexLength, hexResult, tmp, tmpEsc, ch;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
   ch = state.input.charCodeAt(state.position);
 
@@ -833,7 +955,7 @@ function readDoubleQuotedScalar(state: State, nodeIndent: number) {
   }
 
   state.kind = 'scalar';
-  var scalar = ast.newScalar();
+  const scalar = ast.newScalar();
   scalar.doubleQuoted = true;
   state.result = scalar;
   scalar.startPosition = state.position;
@@ -916,7 +1038,7 @@ function readDoubleQuotedScalar(state: State, nodeIndent: number) {
 }
 
 function readFlowCollection(state: State, nodeIndent) {
-  var readNext = true,
+  let readNext = true,
     _line,
     _tag = state.tag,
     _result: ast.YAMLNode,
@@ -968,7 +1090,11 @@ function readFlowCollection(state: State, nodeIndent) {
       _result.endPosition = state.position;
       return true;
     } else if (!readNext) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
       var p = state.position;
+=======
+      const p = state.position;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
       throwError(state, 'missed comma between flow collection entries');
       state.position = p + 1;
     }
@@ -1003,16 +1129,31 @@ function readFlowCollection(state: State, nodeIndent) {
     }
 
     if (isMapping) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
       storeMappingPair(state, <ast.YamlMap>_result, keyTag, keyNode, valueNode);
+=======
+      storeMappingPair(
+        state,
+        _result as ast.YamlMap,
+        keyTag,
+        keyNode,
+        valueNode
+      );
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     } else if (isPair) {
-      var mp = storeMappingPair(state, null, keyTag, keyNode, valueNode);
+      const mp = storeMappingPair(state, null, keyTag, keyNode, valueNode);
       mp.parent = _result;
-      (<ast.YAMLSequence>_result).items.push(mp);
+      (_result as ast.YAMLSequence).items.push(mp);
     } else {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
       if (keyNode) {
         keyNode.parent = _result;
       }
       (<ast.YAMLSequence>_result).items.push(keyNode);
+=======
+      keyNode.parent = _result;
+      (_result as ast.YAMLSequence).items.push(keyNode);
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     }
     _result.endPosition = state.position + 1 /*need to add one more char*/;
     skipSeparationSpace(state, true, nodeIndent);
@@ -1031,7 +1172,7 @@ function readFlowCollection(state: State, nodeIndent) {
 }
 
 function readBlockScalar(state: State, nodeIndent) {
-  var captureStart,
+  let captureStart,
     folding,
     chomping = CHOMPING_CLIP,
     detectedIndent = false,
@@ -1050,7 +1191,7 @@ function readBlockScalar(state: State, nodeIndent) {
   } else {
     return false;
   }
-  var sc = ast.newScalar();
+  const sc = ast.newScalar();
   state.kind = 'scalar';
   state.result = sc;
   sc.startPosition = state.position;
@@ -1174,10 +1315,10 @@ function readBlockScalar(state: State, nodeIndent) {
     captureSegment(state, captureStart, state.position, false);
   }
   sc.endPosition = state.position;
-  var i = state.position - 1;
-  var needMinus = false;
+  let i = state.position - 1;
+  const needMinus = false;
   while (true) {
-    var c = state.input[i];
+    const c = state.input[i];
     if (c == '\r' || c == '\n') {
       if (needMinus) {
         i--;
@@ -1188,7 +1329,11 @@ function readBlockScalar(state: State, nodeIndent) {
       break;
     }
     i--;
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
     //needMinus=true;
+=======
+    // needMinus=true;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
   }
   sc.endPosition = i;
   sc.rawValue = state.input.substring(sc.startPosition, sc.endPosition);
@@ -1196,7 +1341,7 @@ function readBlockScalar(state: State, nodeIndent) {
 }
 
 function readBlockSequence(state: State, nodeIndent) {
-  var _line,
+  let _line,
     _tag = state.tag,
     _anchor = state.anchor,
     _result = ast.newItems(),
@@ -1262,7 +1407,7 @@ function readBlockSequence(state: State, nodeIndent) {
 }
 
 function readBlockMapping(state: State, nodeIndent, flowIndent) {
-  var following,
+  let following,
     allowCompact,
     _line,
     _tag = state.tag,
@@ -1435,7 +1580,7 @@ function readBlockMapping(state: State, nodeIndent, flowIndent) {
 }
 
 function readTagProperty(state: State) {
-  var _position,
+  let _position,
     isVerbatim = false,
     isNamed = false,
     tagHandle,
@@ -1528,7 +1673,11 @@ function readTagProperty(state: State) {
 }
 
 function readAnchorProperty(state: State) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var _position, ch;
+=======
+  let _position, ch;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
   ch = state.input.charCodeAt(state.position);
 
@@ -1559,7 +1708,11 @@ function readAnchorProperty(state: State) {
 }
 
 function readAlias(state: State) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var _position,
+=======
+  let _position,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     alias,
     len = state.length,
     input = state.input,
@@ -1611,7 +1764,11 @@ function composeNode(
   allowToSeek,
   allowCompact
 ) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var allowBlockStyles,
+=======
+  let allowBlockStyles,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     allowBlockScalars,
     allowBlockCollections,
     indentStatus = 1, // 1: this>parent, 0: this=parent, -1: this<parent
@@ -1646,8 +1803,8 @@ function composeNode(
     }
   }
 
-  let tagStart = state.position;
-  let tagColumn = state.position - state.lineStart;
+  const tagStart = state.position;
+  const tagColumn = state.position - state.lineStart;
   if (1 === indentStatus) {
     while (readTagProperty(state) || readAnchorProperty(state)) {
       if (skipSeparationSpace(state, true, -1)) {
@@ -1744,10 +1901,17 @@ function composeNode(
         // Implicit resolving is not allowed for non-scalar types, and '?'
         // non-specific tag is only assigned to plain scalars. So, it isn't
         // needed to check for 'kind' conformity.
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
         var vl = state.result['value'];
         if (type.resolve(vl)) {
           // `state.result` updated in resolver if matched
           state.result.valueObject = type.construct(state.result['value']);
+=======
+        const vl = state.result.value;
+        if (type.resolve(vl)) {
+          // `state.result` updated in resolver if matched
+          state.result.valueObject = type.construct(state.result.value);
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
           state.tag = type.tag;
           if (null !== state.anchor) {
             state.result.anchorId = state.anchor;
@@ -1759,6 +1923,7 @@ function composeNode(
     } else if (_hasOwnProperty.call(state.typeMap, state.tag)) {
       type = state.typeMap[state.tag];
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
       if (
         null !== state.result &&
         type.kind !== state.kind &&
@@ -1766,6 +1931,9 @@ function composeNode(
           (type.additionalKinds &&
             type.additionalKinds.indexOf(state.kind) === -1))
       ) {
+=======
+      if (null !== state.result && type.kind !== state.kind) {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
         throwError(
           state,
           'unacceptable node kind for !<' +
@@ -1806,7 +1974,7 @@ function composeNode(
 }
 
 function readDocument(state: State) {
-  var documentStart = state.position,
+  let documentStart = state.position,
     _position,
     directiveName,
     directiveArgs,
@@ -1908,7 +2076,7 @@ function readDocument(state: State) {
     throwWarning(state, 'non-ASCII line breaks are interpreted as content');
   }
 
-  state.documents.push(<any>state.result);
+  state.documents.push(state.result as any);
 
   if (state.position === state.lineStart && testDocumentSeparator(state)) {
     if (0x2e /* . */ === state.input.charCodeAt(state.position)) {
@@ -1929,7 +2097,7 @@ function loadDocuments(input: string, options) {
   input = String(input);
   options = options || {};
 
-  let inputLength = input.length;
+  const inputLength = input.length;
   if (inputLength !== 0) {
     // Add tailing `\n` if not exists
     if (
@@ -1945,7 +2113,7 @@ function loadDocuments(input: string, options) {
     }
   }
 
-  var state = new State(input, options);
+  const state = new State(input, options);
 
   // Use 0 as string terminator. That significantly simplifies bounds check.
   state.input += '\0';
@@ -1956,27 +2124,35 @@ function loadDocuments(input: string, options) {
   }
 
   while (state.position < state.length - 1) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
     var q = state.position;
     readDocument(state);
     if (state.position <= q) {
       for (; state.position < state.length - 1; state.position++) {
         var c = state.input.charAt(state.position);
+=======
+    const q = state.position;
+    readDocument(state);
+    if (state.position <= q) {
+      for (; state.position < state.length - 1; state.position++) {
+        const c = state.input.charAt(state.position);
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
         if (c == '\n') {
           break;
         }
       }
-      //skip to the new lne
+      // skip to the new lne
     }
   }
 
-  let documents = state.documents;
-  let docsCount = documents.length;
+  const documents = state.documents;
+  const docsCount = documents.length;
   if (docsCount > 0) {
-    //last document takes the file till the end
+    // last document takes the file till the end
     documents[docsCount - 1].endPosition = inputLength;
   }
 
-  for (let x of documents) {
+  for (const x of documents) {
     x.errors = state.errors;
     if (x.startPosition > x.endPosition) {
       x.startPosition = x.endPosition;
@@ -1990,7 +2166,11 @@ export function loadAll(
   iterator: (document: ast.YAMLNode) => void,
   options: LoadOptions = {}
 ) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var documents = loadDocuments(input, options),
+=======
+  let documents = loadDocuments(input, options),
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     index,
     length;
 
@@ -2000,7 +2180,11 @@ export function loadAll(
 }
 
 export function load(input: string, options: LoadOptions = {}): ast.YAMLNode {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var documents = loadDocuments(input, options),
+=======
+  let documents = loadDocuments(input, options),
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     index,
     length;
 
@@ -2010,13 +2194,21 @@ export function load(input: string, options: LoadOptions = {}): ast.YAMLNode {
   } else if (1 === documents.length) {
     return documents[0];
   }
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   var e = new YAMLException(
+=======
+  const e = new YAMLException(
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
     'expected a single document in the stream, but found more'
   );
   e.mark = new Mark('', '', 0, 0, 0);
   e.mark.position = documents[0].endPosition;
   documents[0].errors.push(e);
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/loader.ts
   //it is an artifact which is caused by the fact that we are checking next char before stopping parse
+=======
+  // it is an artifact which is caused by the fact that we are checking next char before stopping parse
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/loader.ts
 
   return documents[0];
 }

@@ -2,7 +2,7 @@
 
 import YAMLException from './exception';
 
-var TYPE_CONSTRUCTOR_OPTIONS = [
+const TYPE_CONSTRUCTOR_OPTIONS = [
   'kind',
   'resolve',
   'construct',
@@ -13,10 +13,14 @@ var TYPE_CONSTRUCTOR_OPTIONS = [
   'styleAliases',
 ];
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type.ts
 var YAML_NODE_KINDS = ['scalar', 'sequence', 'mapping'];
+=======
+const YAML_NODE_KINDS = ['scalar', 'sequence', 'mapping'];
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type.ts
 
 function compileStyleAliases(map) {
-  var result = {};
+  const result = {};
 
   if (null !== map) {
     Object.keys(map).forEach(function(style) {
@@ -30,6 +34,7 @@ function compileStyleAliases(map) {
 }
 
 export class Type {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type.ts
   tag;
   kind;
   resolve;
@@ -40,6 +45,18 @@ export class Type {
   defaultStyle;
   styleAliases;
   loadKind;
+=======
+  public tag;
+  public kind;
+  public resolve;
+  public construct;
+  public instanceOf;
+  public predicate;
+  public represent;
+  public defaultStyle;
+  public styleAliases;
+  public loadKind;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type.ts
 
   constructor(tag, options) {
     options = options || {};
@@ -58,13 +75,20 @@ export class Type {
 
     // TODO: Add tag format check.
     this.tag = tag;
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type.ts
     this.kind = options['kind'] || null;
     this.resolve =
       options['resolve'] ||
+=======
+    this.kind = options.kind || null;
+    this.resolve =
+      options.resolve ||
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type.ts
       function() {
         return true;
       };
     this.construct =
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type.ts
       options['construct'] ||
       function(data) {
         return data;
@@ -74,6 +98,17 @@ export class Type {
     this.represent = options['represent'] || null;
     this.defaultStyle = options['defaultStyle'] || null;
     this.styleAliases = compileStyleAliases(options['styleAliases'] || null);
+=======
+      options.construct ||
+      function(data) {
+        return data;
+      };
+    this.instanceOf = options.instanceOf || null;
+    this.predicate = options.predicate || null;
+    this.represent = options.represent || null;
+    this.defaultStyle = options.defaultStyle || null;
+    this.styleAliases = compileStyleAliases(options.styleAliases || null);
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type.ts
 
     if (-1 === YAML_NODE_KINDS.indexOf(this.kind)) {
       throw new YAMLException(

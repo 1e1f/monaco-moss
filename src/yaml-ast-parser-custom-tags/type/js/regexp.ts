@@ -1,5 +1,8 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/js/regexp.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/js/regexp.ts
 import { Type } from '../../type';
 
 function resolveJavascriptRegExp(data) {
@@ -11,7 +14,7 @@ function resolveJavascriptRegExp(data) {
     return false;
   }
 
-  var regexp = data,
+  let regexp = data,
     tail = /\/([gim]*)$/.exec(data),
     modifiers = '';
 
@@ -34,7 +37,7 @@ function resolveJavascriptRegExp(data) {
   }
 
   try {
-    var dummy = new RegExp(regexp, modifiers);
+    const dummy = new RegExp(regexp, modifiers);
     return true;
   } catch (error) {
     return false;
@@ -42,7 +45,7 @@ function resolveJavascriptRegExp(data) {
 }
 
 function constructJavascriptRegExp(data) {
-  var regexp = data,
+  let regexp = data,
     tail = /\/([gim]*)$/.exec(data),
     modifiers = '';
 
@@ -58,7 +61,7 @@ function constructJavascriptRegExp(data) {
 }
 
 function representJavascriptRegExp(object /*, style*/) {
-  var result = '/' + object.source + '/';
+  let result = '/' + object.source + '/';
 
   if (object.global) {
     result += 'g';

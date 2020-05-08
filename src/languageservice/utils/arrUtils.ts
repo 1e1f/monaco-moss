@@ -1,9 +1,14 @@
+import { SingleYAMLDocument, YAMLDocument } from '../yamlLanguageTypes';
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Red Hat, Inc. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+<<<<<<< HEAD
 import { SingleYAMLDocument } from '../parser/yamlParser04';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 export function removeDuplicates(arr, prop) {
   const new_arr = [];
   const lookup = {};
@@ -37,6 +42,7 @@ export function getLineOffsets(textDocString: String): number[] {
   if (isLineStart && text.length > 0) {
     lineOffsets.push(text.length);
   }
+<<<<<<< HEAD
 
   return lineOffsets;
 }
@@ -105,3 +111,39 @@ export function filterInvalidCustomTags(customTags: String[]): String[] {
     return false;
   });
 }
+=======
+
+  return lineOffsets;
+}
+
+export function removeDuplicatesObj(objArray) {
+  const nonDuplicateSet = new Set();
+  const nonDuplicateArr = [];
+  for (const obj in objArray) {
+    const currObj = objArray[obj];
+    const stringifiedObj = JSON.stringify(currObj);
+    if (!nonDuplicateSet.has(stringifiedObj)) {
+      nonDuplicateArr.push(currObj);
+      nonDuplicateSet.add(stringifiedObj);
+    }
+  }
+
+  return nonDuplicateArr;
+}
+
+export function matchOffsetToDocument(
+  offset: number,
+  doc: YAMLDocument
+): SingleYAMLDocument {
+  for (const currDoc of doc.documents) {
+    if (
+      currDoc.root &&
+      currDoc.root.length + currDoc.root.offset >= offset &&
+      currDoc.root.offset <= offset
+    ) {
+      return currDoc;
+    }
+  }
+  return null;
+}
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4

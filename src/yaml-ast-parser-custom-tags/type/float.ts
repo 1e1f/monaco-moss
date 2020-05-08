@@ -1,9 +1,12 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/float.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/float.ts
 import * as common from '../common';
 import { Type } from '../type';
 
-var YAML_FLOAT_PATTERN = new RegExp(
+const YAML_FLOAT_PATTERN = new RegExp(
   '^(?:[-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+][0-9]+)?' +
     '|\\.[0-9_]+(?:[eE][-+][0-9]+)?' +
     '|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*' +
@@ -16,7 +19,7 @@ function resolveYamlFloat(data) {
     return false;
   }
 
-  var value, sign, base, digits;
+  let value, sign, base, digits;
 
   if (!YAML_FLOAT_PATTERN.test(data)) {
     return false;
@@ -25,7 +28,7 @@ function resolveYamlFloat(data) {
 }
 
 function constructYamlFloat(data) {
-  var value, sign, base, digits;
+  let value, sign, base, digits;
 
   value = data.replace(/_/g, '').toLowerCase();
   sign = '-' === value[0] ? -1 : 1;
@@ -41,7 +44,11 @@ function constructYamlFloat(data) {
     return NaN;
   } else if (0 <= value.indexOf(':')) {
     value.split(':').forEach(function(v) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/float.ts
       digits.unshift((<any>parseFloat)(v, 10));
+=======
+      digits.unshift((parseFloat as any)(v, 10));
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/float.ts
     });
 
     value = 0.0;
@@ -54,7 +61,7 @@ function constructYamlFloat(data) {
 
     return sign * value;
   }
-  return sign * (<any>parseFloat)(value, 10);
+  return sign * (parseFloat as any)(value, 10);
 }
 
 function representYamlFloat(object, style) {

@@ -41,7 +41,11 @@ export function getLineStartPositions(text: string) {
 
     if (c === '\r') {
       // Check for Windows encoding, otherwise we are old Mac
+<<<<<<< HEAD
       if (i + 1 < text.length && text[i + 1] === '\n') {
+=======
+      if (i + 1 < text.length && text[i + 1] == '\n') {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
         i++;
       }
 
@@ -63,4 +67,8 @@ export function getPosition(pos: number, lineStartPositions: number[]) {
   }
 
   return { line, column: pos - lineStartPositions[line] };
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4

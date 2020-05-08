@@ -3,7 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+<<<<<<< HEAD
 declare namespace monaco.languages.yaml {
+=======
+declare namespace monaco.languages.moss {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
   export interface DiagnosticsOptions {
     /**
      * If set, the validator will be enabled and perform syntax validation as well as schema based validation.
@@ -32,6 +36,7 @@ declare namespace monaco.languages.yaml {
      *  If set, the schema service would load schema content on-demand with 'fetch' if available
      */
     readonly enableSchemaRequest?: boolean;
+<<<<<<< HEAD
     /**
      * If specified, this prefix will be added to all on demand schema requests
      */
@@ -51,4 +56,15 @@ declare namespace monaco.languages.yaml {
   }
 
   export const yamlDefaults: LanguageServiceDefaults;
+=======
+  }
+
+  export interface LanguageServiceDefaults {
+    readonly onDidChange: IEvent<LanguageServiceDefaults>;
+    readonly diagnosticsOptions: DiagnosticsOptions;
+    setDiagnosticsOptions(options: DiagnosticsOptions): void;
+  }
+
+  export const mossDefaults: LanguageServiceDefaults;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 }

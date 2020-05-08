@@ -1,5 +1,6 @@
 'use strict';
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/mark.ts
 import * as common from './common';
 
 class Mark {
@@ -12,11 +13,23 @@ class Mark {
   ) {}
 
   filePath: string;
+=======
+export default class Mark {
+  public filePath: string;
 
-  toLineEnd: boolean;
+  public toLineEnd: boolean;
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/mark.ts
 
-  getSnippet(indent: number = 0, maxLength: number = 75) {
-    var head, start, tail, end, snippet;
+  constructor(
+    public name: string,
+    public buffer: string,
+    public position: number,
+    public line: number,
+    public column: number
+  ) {}
+
+  public getSnippet(indent: number = 0, maxLength: number = 75) {
+    let head, start, tail, end, snippet;
 
     if (!this.buffer) {
       return null;
@@ -68,8 +81,13 @@ class Mark {
     );
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/mark.ts
   toString(compact: boolean = true) {
     var snippet,
+=======
+  public toString(compact: boolean = true) {
+    let snippet,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/mark.ts
       where = '';
 
     if (this.name) {
@@ -89,4 +107,7 @@ class Mark {
     return where;
   }
 }
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/mark.ts
 export default Mark;
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/mark.ts

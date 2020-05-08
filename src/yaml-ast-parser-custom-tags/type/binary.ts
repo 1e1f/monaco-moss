@@ -1,6 +1,9 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/binary.ts
 'use strict';
 declare function require(n: string): any;
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/binary.ts
 /*eslint-disable no-bitwise*/
 
 // A trick for browserified version.
@@ -10,7 +13,11 @@ declare var NodeBuffer: any;
 import { Type } from '../type';
 
 // [ 64, 65, 66 ] -> [ padding, CR, LF ]
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/binary.ts
 var BASE64_MAP =
+=======
+const BASE64_MAP =
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/binary.ts
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n\r';
 
 function resolveYamlBinary(data) {
@@ -18,7 +25,11 @@ function resolveYamlBinary(data) {
     return false;
   }
 
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/binary.ts
   var code,
+=======
+  let code,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/binary.ts
     idx,
     bitlen = 0,
     len = 0,
@@ -47,7 +58,11 @@ function resolveYamlBinary(data) {
 }
 
 function constructYamlBinary(data) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/binary.ts
   var code,
+=======
+  let code,
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/binary.ts
     idx,
     tailbits,
     input = data.replace(/[\r\n=]/g, ''), // remove CR/LF & padding to simplify scan
@@ -92,7 +107,11 @@ function constructYamlBinary(data) {
 }
 
 function representYamlBinary(object /*, style*/) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/type/binary.ts
   var result = '',
+=======
+  let result = '',
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/type/binary.ts
     bits = 0,
     idx,
     tail,

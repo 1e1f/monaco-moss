@@ -7,7 +7,14 @@
 import * as languageFeatures from './languageFeatures';
 import { LanguageServiceDefaultsImpl } from './monaco.contribution';
 import { WorkerManager } from './workerManager';
+<<<<<<< HEAD:src/yamlMode.ts
 import { YAMLWorker } from './yamlWorker';
+=======
+import { MossWorker } from './mossWorker';
+import { LanguageServiceDefaultsImpl } from './monaco.contribution';
+import { tokenProvider, languageConf } from './mossLanguage'
+import * as languageFeatures from './languageFeatures';
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/mossMode.ts
 
 import Promise = monaco.Promise;
 import Uri = monaco.Uri;
@@ -25,7 +32,13 @@ export function setupMode(defaults: LanguageServiceDefaultsImpl): void {
     return client.getLanguageServiceWorker(...uris);
   };
 
+<<<<<<< HEAD:src/yamlMode.ts
   const languageId = defaults.languageId;
+=======
+	const worker: languageFeatures.WorkerAccessor = (...uris: Uri[]): Promise<MossWorker> => {
+		return client.getLanguageServiceWorker(...uris);
+	};
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/mossMode.ts
 
   disposables.push(
     monaco.languages.registerCompletionItemProvider(
@@ -64,6 +77,7 @@ export function setupMode(defaults: LanguageServiceDefaultsImpl): void {
     monaco.languages.setLanguageConfiguration(languageId, richEditConfiguration)
   );
 
+<<<<<<< HEAD:src/yamlMode.ts
   // Color adapter should be necessary most of the time:
   // disposables.push(monaco.languages.registerColorProvider(languageId, new languageFeatures.DocumentColorAdapter(worker)));
 }
@@ -99,3 +113,14 @@ const richEditConfiguration: monaco.languages.LanguageConfiguration = {
     },
   ],
 };
+=======
+	disposables.push(monaco.languages.registerCompletionItemProvider(languageId, new languageFeatures.CompletionAdapter(worker)));
+	disposables.push(monaco.languages.registerHoverProvider(languageId, new languageFeatures.HoverAdapter(worker)));
+	disposables.push(monaco.languages.registerDocumentSymbolProvider(languageId, new languageFeatures.DocumentSymbolAdapter(worker)));
+	disposables.push(monaco.languages.registerDocumentFormattingEditProvider(languageId, new languageFeatures.DocumentFormattingEditProvider(worker)));
+	disposables.push(monaco.languages.registerDocumentRangeFormattingEditProvider(languageId, new languageFeatures.DocumentRangeFormattingEditProvider(worker)));
+	disposables.push(new languageFeatures.DiagnosticsAdapter(languageId, worker, defaults));
+	disposables.push(monaco.languages.setMonarchTokensProvider(languageId, tokenProvider as any));
+	disposables.push(monaco.languages.setLanguageConfiguration(languageId, languageConf as any));
+}
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/mossMode.ts

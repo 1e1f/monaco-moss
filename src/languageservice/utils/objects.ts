@@ -62,22 +62,37 @@ export function equals(one: any, other: any): boolean {
   return true;
 }
 
+<<<<<<< HEAD
 // tslint:disable-next-line: no-any
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 export function isNumber(val: any): val is number {
   return typeof val === 'number';
 }
 
+<<<<<<< HEAD
 // tslint:disable-next-line: no-any
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 export function isDefined(val: any): val is object {
   return typeof val !== 'undefined';
 }
 
+<<<<<<< HEAD
 // tslint:disable-next-line: no-any
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4
 export function isBoolean(val: any): val is boolean {
   return typeof val === 'boolean';
 }
 
+<<<<<<< HEAD
 // tslint:disable-next-line: no-any
 export function isString(val: any): val is string {
   return typeof val === 'string';
 }
+=======
+export function isString(val: any): val is string {
+  return typeof val === 'string';
+}
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4

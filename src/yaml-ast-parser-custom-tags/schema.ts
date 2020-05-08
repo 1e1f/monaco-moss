@@ -1,5 +1,8 @@
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/schema.ts
 'use strict';
 
+=======
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/schema.ts
 /*eslint-disable max-len*/
 
 import * as common from './common';
@@ -7,7 +10,7 @@ import YAMLException from './exception';
 import { Type } from './type';
 
 function compileList(schema: Schema, name, result) {
-  var exclude = [];
+  const exclude = [];
 
   schema.include.forEach(function(includedSchema) {
     result = compileList(includedSchema, name, result);
@@ -29,7 +32,11 @@ function compileList(schema: Schema, name, result) {
 }
 
 function compileMap(/* lists... */) {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/schema.ts
   var result = {},
+=======
+  let result = {},
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/schema.ts
     index,
     length;
 
@@ -51,6 +58,7 @@ export interface SchemaDefinition {
 }
 
 export class Schema {
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/schema.ts
   include: Schema[];
   implicit: Type[];
   explicit: Type[];
@@ -84,14 +92,24 @@ export class Schema {
     var schemas, types;
 
     switch (arguments.length) {
+=======
+  public static DEFAULT = null;
+  public static create = function createSchema(
+    ...args: [Schema | Schema[], Type[]] | [Type[]]
+  ) {
+    let schemas: Schema | Schema[];
+    let types: Type[];
+
+    switch (args.length) {
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/schema.ts
       case 1:
         schemas = Schema.DEFAULT;
-        types = arguments[0];
+        types = args[0];
         break;
 
       case 2:
-        schemas = arguments[0];
-        types = arguments[1];
+        schemas = args[0];
+        types = args[1];
         break;
 
       default:
@@ -126,6 +144,39 @@ export class Schema {
     return new Schema({
       include: schemas,
       explicit: types,
+<<<<<<< HEAD:src/yaml-ast-parser-custom-tags/schema.ts
     });
   };
+=======
+    });
+  };
+
+  public include: Schema[];
+  public implicit: Type[];
+  public explicit: Type[];
+
+  public compiledImplicit: any[];
+  public compiledExplicit: any[];
+  public compiledTypeMap: any[];
+  constructor(definition: SchemaDefinition) {
+    this.include = definition.include || [];
+    this.implicit = definition.implicit || [];
+    this.explicit = definition.explicit || [];
+
+    this.implicit.forEach(function(type) {
+      if (type.loadKind && 'scalar' !== type.loadKind) {
+        throw new YAMLException(
+          'There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.'
+        );
+      }
+    });
+
+    this.compiledImplicit = compileList(this, 'implicit', []);
+    this.compiledExplicit = compileList(this, 'explicit', []);
+    this.compiledTypeMap = (compileMap as any)(
+      this.compiledImplicit,
+      this.compiledExplicit
+    );
+  }
+>>>>>>> 27b8e1bca91dac4064e513972d3f82f459ede4f4:src/yaml-ast-parser/schema.ts
 }
